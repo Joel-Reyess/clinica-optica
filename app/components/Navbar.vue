@@ -41,21 +41,26 @@ const items = computed<NavigationMenuItem[]>(() => [
 <template>
     <UHeader>
         <template #title>
-            <Logo class="h-6 w-autop"/>
+            <Logo class="h-6 w-autop" />
+            <UHeader title="Clinica Optica" :toggle="false"/>
         </template>
-
         <UNavigationMenu :items="items"/>
 
         <template #right>
             <UColorModeButton />
 
-            <UTooltip text="Perfil" :kbds="['meta' , 'G']">
-                <UBotton 
-                icon="user"
+            <UTooltip text="Perfil" :kbds="['meta', 'G']">
+                <UButton 
+                icon="i-lucide-user"
                 variant="ghost"
                 aria-label="Perfil"
+                color="neutral"
                 />
             </UTooltip>
+        </template>
+
+        <template #body>
+            <UNavigationMenu :items="items" orientation="vertical" class="-mx-2.5" />
         </template>
     </UHeader>
 </template>

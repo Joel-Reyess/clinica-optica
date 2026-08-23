@@ -4,6 +4,5 @@ import Navbar from './components/Navbar.vue'
 <template>
   <UApp>
     <Navbar/>
-    <NuxtPage />
   </UApp>
 </template>
