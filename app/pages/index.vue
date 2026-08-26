@@ -1,76 +1,72 @@
+<script setup lang="ts">
+import type { ButtonProps } from '@nuxt/ui'
+
+const links = ref<ButtonProps[]>([
+  {
+    label: 'Agenda tu cita',
+    to: '/docs/getting-started',
+    icon: 'i-lucide-calendar'
+  },
+  {
+    label: 'Quiero unos',
+    to: '/docs/getting-started/theme/design-system',
+    color: 'neutral',
+    variant: 'subtle',
+    trailingIcon: 'i-lucide-glasses'
+  }
+])
+
+const items = [
+  'https://picsum.photos/640/640?random=1',
+  'https://picsum.photos/640/640?random=2',
+  'https://picsum.photos/640/640?random=3',
+  'https://picsum.photos/640/640?random=4',
+  'https://picsum.photos/640/640?random=5',
+  'https://picsum.photos/640/640?random=6'
+]
+</script>
+
 <template>
   <div>
-    <UPageHero
-      title="Nuxt Starter Template"
-      description="A production-ready starter template powered by Nuxt UI. Build beautiful, accessible, and performant applications in minutes, not hours."
-      :links="[{
-        label: 'Get started',
-        to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-        target: '_blank',
-        trailingIcon: 'i-lucide-arrow-right',
-        size: 'xl'
-      }, {
-        label: 'Use this template',
-        to: 'https://github.com/nuxt-ui-templates/starter',
-        target: '_blank',
-        icon: 'i-simple-icons-github',
-        size: 'xl',
-        color: 'neutral',
-        variant: 'subtle'
-      }]"
-    />
 
-    <UPageSection
-      id="features"
-      title="Everything you need to build modern Nuxt apps"
-      description="Start with a solid foundation. This template includes all the essentials for building production-ready applications with Nuxt UI's powerful component system."
-      :features="[{
-        icon: 'i-lucide-rocket',
-        title: 'Production-ready from day one',
-        description: 'Pre-configured with TypeScript, ESLint, Tailwind CSS, and all the best practices. Focus on building features, not setting up tooling.'
-      }, {
-        icon: 'i-lucide-palette',
-        title: 'Beautiful by default',
-        description: 'Leveraging Nuxt UI\'s design system with automatic dark mode, consistent spacing, and polished components that look great out of the box.'
-      }, {
-        icon: 'i-lucide-zap',
-        title: 'Lightning fast',
-        description: 'Optimized for performance with SSR/SSG support, automatic code splitting, and edge-ready deployment. Your users will love the speed.'
-      }, {
-        icon: 'i-lucide-blocks',
-        title: '100+ components included',
-        description: 'Access Nuxt UI\'s comprehensive component library. From forms to navigation, everything is accessible, responsive, and customizable.'
-      }, {
-        icon: 'i-lucide-code-2',
-        title: 'Developer experience first',
-        description: 'Auto-imports, hot module replacement, and TypeScript support. Write less boilerplate and ship more features.'
-      }, {
-        icon: 'i-lucide-shield-check',
-        title: 'Built for scale',
-        description: 'Enterprise-ready architecture with proper error handling, SEO optimization, and security best practices built-in.'
-      }]"
-    />
+    <UPageHero title="Bienvenido a Clinica Óptica" description="Lentes para verte mejor y cuidar tu salud visual
+    Explora nuestra amplia gama de productos y servicios para encontrar la solución perfecta para tus necesidades"
+      headline="" orientation="horizontal" reverse :links="links">
+      <img src="../assets/fondo1.svg" alt="Clinica Óptica" class="w-full" />
+    </UPageHero>
 
-    <UPageSection>
-      <UPageCTA
-        title="Ready to build your next Nuxt app?"
-        description="Join thousands of developers building with Nuxt and Nuxt UI. Get this template and start shipping today."
-        variant="subtle"
-        :links="[{
-          label: 'Start building',
-          to: 'https://ui.nuxt.com/docs/getting-started/installation/nuxt',
-          target: '_blank',
-          trailingIcon: 'i-lucide-arrow-right',
-          color: 'neutral'
-        }, {
-          label: 'View on GitHub',
-          to: 'https://github.com/nuxt-ui-templates/starter',
-          target: '_blank',
-          icon: 'i-simple-icons-github',
-          color: 'neutral',
-          variant: 'outline'
-        }]"
-      />
-    </UPageSection>
+    <UBanner
+      title="Checate esto"
+      description="Encuentra tu lente ideal"
+      :ui="{
+        icon: 'size-11',
+        title: 'text-lg font-semibold',
+      }"
+      align="center"
+      color="secondary"
+      padding="pb-8"
+    />
+   
+    <USeparator class="my-8" />
+
+    <UCarousel v-slot="{ item }" loop arrows :autoplay="{ delay: 2000 }" wheel-gestures :prev="{ variant: 'solid' }"
+      :next="{ variant: 'solid' }" :items="items" :ui="{
+        item: 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5',
+        prev: 'sm:start-4',
+        next: 'sm:end-4',
+        container: 'ms-4'
+      }">
+      <img :src="item" width="320" height="320">
+    </UCarousel>
+
+    <USeparator class="my-8" />
+    <UMarquee :overlay="false">
+      <UIcon name="i-simple-icons-github" class="size-10 shrink-0" />
+      <UIcon name="i-simple-icons-discord" class="size-10 shrink-0" />
+      <UIcon name="i-simple-icons-x" class="size-10 shrink-0" />
+      <UIcon name="i-simple-icons-instagram" class="size-10 shrink-0" />
+      <UIcon name="i-simple-icons-linkedin" class="size-10 shrink-0" />
+      <UIcon name="i-simple-icons-facebook" class="size-10 shrink-0" />
+    </UMarquee>
   </div>
 </template>

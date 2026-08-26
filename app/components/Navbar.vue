@@ -42,7 +42,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     <UHeader>
         <template #title>
             <Logo class="h-6 w-autop" />
-            <UHeader title="Clinica Optica" :toggle="false"/>
+            <UHeader title="Clinica Optica" :toggle="false" />
         </template>
         <UNavigationMenu :items="items"/>
 
