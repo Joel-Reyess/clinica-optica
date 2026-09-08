@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import Navbar from './components/Navbar.vue'
-import Index from './pages/index.vue'
+import RouterConfig from './router.options.ts'
 </script>
 <template>
   <UApp>
     <Navbar/>
-    <Index/>
+    <router-view />
   </UApp>
 </template>

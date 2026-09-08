@@ -57,6 +57,17 @@ const items = [
         container: 'ms-4'
       }">
       <img :src="item" width="320" height="320">
+       <template class="footer">
+      <div class="flex justify-between items-center w-full">
+        <div class="font-semibold">
+         $99.99
+        </div>
+
+        <UButton size="sm">
+          Add to Cart
+        </UButton>
+      </div>
+    </template>
     </UCarousel>
 
     <USeparator class="my-8" />

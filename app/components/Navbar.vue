@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
+import routercondig from '../router.options.ts'
 
 const route = useRoute()
 
@@ -7,7 +8,7 @@ const items = computed<NavigationMenuItem[]>(() => [
     {
         label: 'Opticos',
         to: '/opticos',
-        active: route.path.startsWith('/opticos')
+        active: route.path.startsWith('/opticos'),
     },
     {
         label: 'Pala compu',
@@ -54,6 +55,14 @@ const items = computed<NavigationMenuItem[]>(() => [
                 icon="i-lucide-user"
                 variant="ghost"
                 aria-label="Perfil"
+                color="neutral"
+                />
+            </UTooltip>
+            <UTooltip text="Tú carrito" :kbds="['meta', 'G']">
+                <UButton 
+                icon="i-lucide-shopping-cart"
+                variant="ghost"
+                aria-label="Tú carrito"
                 color="neutral"
                 />
             </UTooltip>
