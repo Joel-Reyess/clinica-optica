@@ -5,35 +5,26 @@ import routercondig from '../router.options.ts'
 const route = useRoute()
 
 const items = computed<NavigationMenuItem[]>(() => [
+
     {
-        label: 'Opticos',
-        to: '/opticos',
-        active: route.path.startsWith('/opticos'),
+        label: 'Nosotros',
+        to: '/nosotros',
+        active: route.path.startsWith('/nosotros')
     },
     {
-        label: 'Pala compu',
-        to: '/compu',
-        active: route.path.startsWith('/compu')
+        label: 'Servicios y Lentes',
+        to: '/servicios',
+        active: route.path.startsWith('/servicios')
     },
     {
-        label: 'Sol',
-        to: '/sol',
-        active: route.path.startsWith('/sol')
+        label: 'Empresas y Convenios',
+        to: '/empresas',
+        active: route.path.startsWith('/empresas')
     },
     {
-        label: 'Clip on',
-        to: '/clipon',
-        active: route.path.startsWith('/clipon')
-    },
-    {
-        label: 'Elementales',
-        to: '/elementales',
-        active: route.path.startsWith('/elementales')
-    },
-    {
-        label: 'Agenda tu cita',
-        to: '/citas',
-        active: route.path.startsWith('/citas')
+        label: 'Contacto',
+        to: '/contacto',
+        active: route.path.startsWith('/contacto')
     }
 ])
 

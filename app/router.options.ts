@@ -8,9 +8,24 @@ export default {
       component: () => import('./pages/index.vue')
     },
     {
-      name: 'opticos',
-      path: '/opticos',
-      component: () => import('./pages/clientes/Opticos.vue')
+      name: 'nosotros',
+      path: '/nosotros',
+      component: () => import('./pages/clientes/Nosotros.vue')
+    },
+    {
+      name: 'servicios',
+      path: '/servicios',
+      component: () => import('./pages/clientes/Servicios.vue')
+    },
+    {
+      name: 'empresas',
+      path: '/empresas',
+      component: () => import('./pages/clientes/Empresas.vue')
+    },
+    {
+      name: 'contacto',
+      path: '/contacto',
+      component: () => import('./pages/clientes/Contacto.vue')
     },
   ],
 } satisfies RouterConfig;
