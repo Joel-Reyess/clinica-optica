@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui'
-import routercondig from '../router.options.ts'
 
 const route = useRoute()
 
@@ -33,8 +32,10 @@ const items = computed<NavigationMenuItem[]>(() => [
 <template>
     <UHeader>
         <template #title>
-            <Logo class="h-6 w-autop" />
-            <UHeader title="Clinica Optica" :toggle="false" />
+            <Logo class="">
+                <img src="../assets/logoA.svg" alt="Clinica Óptica" class="size-15 w-full" />
+            </Logo>   
+            <!-- <UHeader title="Clinica Optica" :toggle="false" /> -->
         </template>
         <UNavigationMenu :items="items"/>
 
