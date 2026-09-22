@@ -40,7 +40,7 @@ const items = [
 
     <UCard variant="subtle">
       <template class="text-3xl sm:text-6xl font-bold text-center justify-center items-center align-center-safe">
-        <div class="flex justify-center pb-8">
+        <div class="flex justify-center pb-4">
           <h1 class="text-3xl font-bold">¿Cómo podemos ayudarte?</h1>
         </div>
       </template>
