@@ -17,36 +17,24 @@ const links = ref<ButtonProps[]>([
   }
 ])
 
-const items = [
-  'https://picsum.photos/640/640?random=1',
-  'https://picsum.photos/640/640?random=2',
-  'https://picsum.photos/640/640?random=3',
-  'https://picsum.photos/640/640?random=4',
-  'https://picsum.photos/640/640?random=5',
-  'https://picsum.photos/640/640?random=6'
-]
 </script>
 
 <template>
   <div>
-    <UPageHero class="bg-[url(../../assets/FondoPrincipal.jpg)]" title="Bienvenido a Clinica Óptica" description="Lentes para verte mejor y cuidar tu salud visual
+    <UPageHero class="bg-[url(../../assets/FondoPrincipal.jpg)]" w-full h-full title="Bienvenido a Clinica Óptica"
+      description="Lentes para verte mejor y cuidar tu salud visual
     Explora nuestra amplia gama de productos y servicios para encontrar la solución perfecta para tus necesidades"
       headline="" orientation="horizontal" reverse :links="links">
     </UPageHero>
 
-
     <USeparator class="my-8" />
 
-
     <UCard variant="subtle">
-      <template class="text-3xl sm:text-6xl font-bold text-center justify-center items-center align-center-safe">
         <div class="flex justify-center pb-4">
           <h1 class="text-3xl font-bold">¿Cómo podemos ayudarte?</h1>
         </div>
-      </template>
 
-      <Placeholder class="h-32" />
-      <template class="flex justify-center-safe selt-center items-center flex-wrap gap-4 sm:gap-8 p-4 w-full">
+      <UPageGrid class="flex justify-center-safe selt-center items-center flex-wrap gap-4 sm:gap-8 p-4 ">
         <UPageCard title="Campañas visuales para empresas" description="Llevamos la atención visual a tu equipo."
           icon="i-lucide-building-2">
           <UButton label="Solicitar campaña" variant="solid" color="primary" />
@@ -56,53 +44,49 @@ const items = [
         </UPageCard>
         <UPageCard title="Resolvemos tus dudas" description="Servicios convenios y formas de pago."
           icon="i-lucide-messages-circle">
-          <UButton label="Solicitar campaña" variant="solid" color="primary" />
+          <UButton label="Pedir información" variant="solid" color="primary" />
         </UPageCard>
         <UPageCard title="Lentes con tu graduación" description="Elige tu armazón y comparte tu receta."
           icon="i-lucide-glasses">
-          <UButton label="Solicitar campaña" variant="solid" color="primary" />
+          <UButton label="Cotizar mis lentes" variant="solid" color="primary" />
         </UPageCard>
-
-      </template>
+      </UPageGrid>
     </UCard>
 
-    <template class="text-3xl sm:text-6xl font-bold text-center justify-center items-center align-center-safe">
-        <div class="flex justify-center pb-8">
-          <h1 class="text-3xl font-bold">Encuentra tus proximos lentes</h1>
-        </div>
-      </template>
-
-    <UCarousel v-slot="{ item }" loop arrows :autoplay="{ delay: 2000 }" wheel-gestures :prev="{ variant: 'solid' }"
-      :next="{ variant: 'solid' }" :items="items" :ui="{
-        item: 'basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5',
-        prev: 'sm:start-4',
-        next: 'sm:end-4',
-        container: 'ms-4'
-      }">
-      <img :src="item" width="320" height="320">
-      <template class="footer">
-        <div class="flex justify-between items-center w-full">
-          <div class="font-semibold">
-            $99.99
-          </div>
-
-          <UButton size="sm">
-            Add to Cart
-          </UButton>
-        </div>
-      </template>
-    </UCarousel>
-
+      <div class="flex justify-center pb-8 pt-8">
+        <h1 class="text-3xl font-bold">Encuentra tus proximos lentes</h1>
+      </div>
+    <UCard variant="subtle">
+      <UPageGrid class="flex justify-center-safe selt-center items-center flex-wrap gap-4 sm:gap-8 p-4 ">
+        <UPageCard title="Clásicos">
+          <img src="../assets/Clasicos.jpg" class="w-xs h-62" />
+          <UButton label="Cotizar mi graduación" variant="solid" color="primary" />
+        </UPageCard>
+        <UPageCard title="Modernos">
+            <img src="../assets/Modernos.jpg" class="w-xs h-62 object-cover" />
+          <UButton label="Cotizar mi graduación" variant="solid" color="primary" />
+        </UPageCard>
+        <UPageCard title="Resolvemos tus dudas">
+          <img src="../assets/Seguridad.jpeg" class="w-xs h-62 object-cover" />
+          <UButton label="Cotizar mi graduación" variant="solid" color="primary" />
+        </UPageCard>
+      </UPageGrid>
+    </UCard>
+    
     <USeparator class="my-8" />
-    <UMarquee :overlay="false">
-      <UIcon name="i-simple-icons-github" class="size-10 shrink-0" />
-      <UIcon name="i-simple-icons-discord" class="size-10 shrink-0" />
-      <UIcon name="i-simple-icons-x" class="size-10 shrink-0" />
-      <UIcon name="i-simple-icons-instagram" class="size-10 shrink-0" />
-      <UIcon name="i-simple-icons-linkedin" class="size-10 shrink-0" />
-      <UIcon name="i-simple-icons-facebook" class="size-10 shrink-0" />
-    </UMarquee>
 
+  <UPageGrid class="flex justify-center-safe selt-center items-center flex-wrap gap-4 sm:gap-8 p-4">
+    <UCard
+    title="Introducing Nuxt Icon v1"
+    description="Discover Nuxt Icon v1 - a modern, versatile, and customizable icon solution for your Nuxt projects.">
+    <UButton label="Read more" variant="solid" color="primary" />
+    </UCard>
+    <UCard
+    title="Introducing Nuxt Icon v1"
+    description="Discover Nuxt Icon v1 - a modern, versatile, and customizable icon solution for your Nuxt projects.">
+    <UButton label="Read more" variant="solid" color="primary" />
+    </UCard>
+  </UPageGrid>
     <Footer />
   </div>
 </template>

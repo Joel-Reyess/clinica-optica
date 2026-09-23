@@ -32,7 +32,7 @@ const items = computed<NavigationMenuItem[]>(() => [
 <template>
     <UHeader>
         <template #title>
-            <Logo class="">
+            <Logo>
                 <img src="../assets/logoA.svg" alt="Clinica Óptica" class="size-15 w-full" />
             </Logo>   
             <!-- <UHeader title="Clinica Optica" :toggle="false" /> -->
