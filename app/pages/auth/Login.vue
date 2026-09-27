@@ -5,22 +5,22 @@ import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 const toast = useToast()
 
 const fields: AuthFormField[] = [{
-    name: 'email',
-    type: 'email',
-    label: 'Correo electrónico',
-    placeholder: 'Ingresa tu correo electrónico',
-    required: true
+  name: 'email',
+  type: 'email',
+  label: 'Correo electrónico',
+  placeholder: 'Ingresa tu correo electrónico',
+  required: true
 }, {
-    name: 'password',
-    type: 'password',
-    label: 'Contraseña',
-    placeholder: 'Ingresa tu contraseña',
-    required: true
-},{
-    name: 'remember',
-    type: 'checkbox',
-    label: 'Recordarme',
-    required: false
+  name: 'password',
+  type: 'password',
+  label: 'Contraseña',
+  placeholder: 'Ingresa tu contraseña',
+  required: true
+}, {
+  name: 'remember',
+  type: 'checkbox',
+  label: 'Recordarme',
+  required: false
 }]
 
 const providers = [{
@@ -32,13 +32,13 @@ const providers = [{
 }]
 
 const schema = z.object({
-    email: z.email('Ingresa un correo electrónico válido'),
-    password: z.string('Ingresa tu contraseña').min(6, 'La contraseña debe tener al menos 6 caracteres'),
+  email: z.email('Ingresa un correo electrónico válido'),
+  password: z.string('Ingresa tu contraseña').min(6, 'La contraseña debe tener al menos 6 caracteres')
 })
 type Schema = z.output<typeof schema>
 
 function onSubmit(payload: FormSubmitEvent<Schema>) {
-    console.log('Submmited', payload)
+  console.log('Submmited', payload)
 }
 </script>
 

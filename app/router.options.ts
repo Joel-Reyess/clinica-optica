@@ -1,7 +1,7 @@
 import type { RouterConfig } from 'nuxt/schema'
 
 export default {
-  routes: (_routes) => [
+  routes: _routes => [
     {
       name: 'home',
       path: '/',
@@ -26,6 +26,6 @@ export default {
       name: 'contacto',
       path: '/contacto',
       component: () => import('./pages/clientes/Contacto.vue')
-    },
-  ],
-} satisfies RouterConfig;
+    }
+  ]
+} satisfies RouterConfig

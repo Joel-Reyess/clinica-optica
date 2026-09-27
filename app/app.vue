@@ -2,9 +2,10 @@
 import Navbar from './components/Navbar.vue'
 import RouterConfig from './router.options.ts'
 </script>
+
 <template>
   <UApp>
-    <Navbar/>
+    <Navbar />
     <router-view />
   </UApp>
 </template>

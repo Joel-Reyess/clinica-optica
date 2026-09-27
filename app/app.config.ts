@@ -8,7 +8,7 @@ export default defineAppConfig({
       warning: 'yellow',
       danger: 'red',
       info: 'white',
-      tertiary: '#314aa2',
+      tertiary: '#314aa2'
     }
   }
 })

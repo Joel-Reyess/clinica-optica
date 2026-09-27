@@ -9,6 +9,14 @@ export default defineNuxtConfig({
     enabled: true
   },
 
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: './favicon.ico' }
+      ]
+    }
+  },
+
   css: ['~/assets/css/main.css'],
 
   routeRules: {
@@ -23,14 +31,6 @@ export default defineNuxtConfig({
         commaDangle: 'never',
         braceStyle: '1tbs'
       }
-    }
-  },
-
-  app: {
-    head: {
-      link: [
-        { rel: 'icon', type: 'image/x-icon', href: './favicon.ico' }
-      ]
     }
   }
 })
