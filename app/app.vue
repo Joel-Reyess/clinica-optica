@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Navbar from './components/NavbarClient.vue/index.js'
+import NavbarClient from './components/NavbarClient.vue'
 </script>
 
 <template>
   <UApp>
-    <Navbar />
+    <NavbarClient />
     <router-view />
   </UApp>
 </template>
