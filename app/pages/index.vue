@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ButtonProps, PageFeatureProps } from '@nuxt/ui'
+import type { ButtonProps } from '@nuxt/ui'
 
 const links = ref<ButtonProps[]>([
   {
