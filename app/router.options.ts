@@ -14,8 +14,19 @@ export default {
     },
     {
       name: 'servicios',
-      path: '/servicios',
+      path: '/lentes',
+      alias: '/servicios',
       component: () => import('./pages/clientes/Servicios.vue')
+    },
+    {
+      name: 'informacion',
+      path: '/informacion',
+      component: () => import('./pages/clientes/Informacion.vue')
+    },
+    {
+      name: 'cotizar',
+      path: '/cotizar',
+      component: () => import('./pages/clientes/Cotizacion.vue')
     },
     {
       name: 'empresas',
@@ -26,6 +37,11 @@ export default {
       name: 'contacto',
       path: '/contacto',
       component: () => import('./pages/clientes/Contacto.vue')
+    },
+    {
+      name: 'citas',
+      path: '/citas',
+      component: () => import('./pages/clientes/Citas.vue')
     }
   ]
 } satisfies RouterConfig
