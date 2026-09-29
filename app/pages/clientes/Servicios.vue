@@ -2,7 +2,9 @@
 import evaluationImage from '~/assets/RecOpt.jpg'
 import classicFramesImage from '~/assets/ClassicFrames.png'
 import modernFramesImage from '~/assets/Sunglasses.png'
-import safetyGlassesImage from '~/assets/Seguridad.jpeg'
+import safetyGlassesImage from '~/assets/Fondo.png'
+import safetyStoreImage from '~/assets/Seguridad.jpeg'
+import lifestyleFramesImage from '~/assets/FondoPrincipal.jpg'
 
 useHead({
   title: 'Lentes y servicios | Clínica Óptica',
@@ -51,9 +53,9 @@ const services = [
 const categories = [
   {
     slug: 'clasicos',
-    image: classicFramesImage,
-    imageAlt: 'Armazones clásicos para lentes graduados',
-    imageFit: 'contain',
+    image: lifestyleFramesImage,
+    imageAlt: 'Armazón de lentes de estilo clásico',
+    imageFit: 'cover',
     category: 'Clásicos',
     title: 'Lentes oftálmicos clásicos',
     description: 'Lentes oftálmicos graduados en armazones clásicos. El tipo de mica se define con base en tu receta y las necesidades de uso.'
@@ -71,10 +73,97 @@ const categories = [
     slug: 'seguridad-graduada',
     image: safetyGlassesImage,
     imageAlt: 'Lentes de seguridad graduados',
-    imageFit: 'cover',
+    imageFit: 'contain',
     category: 'Seguridad graduada',
     title: 'Lentes de seguridad graduados',
     description: 'Lentes graduados con protección ocular para el trabajo. Se revisan la receta, el armazón y los requisitos de tu actividad.'
+  }
+]
+
+const products = [
+  {
+    id: 'clasico-havana',
+    category: 'clasicos',
+    name: 'Armazón clásico Havana',
+    subtitle: 'Estilo atemporal',
+    description: 'Una propuesta de estilo clásico para quienes buscan un armazón versátil para el día a día. La graduación y las micas se definen con asesoría profesional.',
+    material: 'Diseño clásico',
+    images: [
+      { src: lifestyleFramesImage, alt: 'Armazón clásico de referencia en exhibición' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' },
+      { src: modernFramesImage, alt: 'Otra propuesta de armazón de referencia' }
+    ]
+  },
+  {
+    id: 'clasico-esencial',
+    category: 'clasicos',
+    name: 'Armazón clásico Esencial',
+    subtitle: 'Diseño para todos los días',
+    description: 'Una alternativa de inspiración clásica con una silueta fácil de combinar. Consulta en clínica los modelos disponibles y su compatibilidad con tu receta.',
+    material: 'Línea clásica',
+    images: [
+      { src: lifestyleFramesImage, alt: 'Armazón de estilo clásico de referencia' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' },
+      { src: modernFramesImage, alt: 'Otra propuesta de armazón de referencia' }
+    ]
+  },
+  {
+    id: 'moderno-urbano',
+    category: 'modernos',
+    name: 'Armazón moderno Urbano',
+    subtitle: 'Estilo contemporáneo',
+    description: 'Una propuesta de inspiración actual para complementar distintos estilos. Las opciones de graduación y mica se confirman de acuerdo con tu receta.',
+    material: 'Diseño moderno',
+    images: [
+      { src: modernFramesImage, alt: 'Vista principal del armazón moderno Urbano' },
+      { src: lifestyleFramesImage, alt: 'Armazón moderno de referencia en exhibición' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'moderno-actitud',
+    category: 'modernos',
+    name: 'Armazón moderno Actitud',
+    subtitle: 'Diseño con personalidad',
+    description: 'Un modelo de muestra con una silueta contemporánea. Acércate para conocer diseños reales, colores y opciones adecuadas para tu graduación.',
+    material: 'Línea moderna',
+    images: [
+      { src: modernFramesImage, alt: 'Vista principal del armazón moderno Actitud' },
+      { src: lifestyleFramesImage, alt: 'Armazón moderno de referencia en exhibición' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'seguridad-pro',
+    category: 'seguridad-graduada',
+    name: 'Lente de seguridad Pro',
+    subtitle: 'Protección para el trabajo',
+    description: 'Una referencia visual de lentes de protección. La graduación, el nivel de protección y la compatibilidad con cada actividad requieren valoración y confirmación en clínica.',
+    material: 'Seguridad visual',
+    images: [
+      { src: safetyGlassesImage, alt: 'Vista principal de referencia de lentes de seguridad' },
+      { src: classicFramesImage, alt: 'Otra opción de protección ocular de referencia' },
+      { src: safetyStoreImage, alt: 'Exhibición de opciones de lentes en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'seguridad-industrial',
+    category: 'seguridad-graduada',
+    name: 'Lente de seguridad Industrial',
+    subtitle: 'Asesoría según tu actividad',
+    description: 'Una opción de muestra para explorar lentes de protección. Consulta con el equipo los requisitos de seguridad y las alternativas graduadas disponibles.',
+    material: 'Uso industrial',
+    images: [
+      { src: safetyGlassesImage, alt: 'Vista principal de referencia de lentes de seguridad industrial' },
+      { src: classicFramesImage, alt: 'Otra opción de protección ocular de referencia' },
+      { src: safetyStoreImage, alt: 'Exhibición de opciones de lentes en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
   }
 ]
 
@@ -83,6 +172,30 @@ const selectedCategory = computed(() => {
   return typeof categorySlug === 'string'
     ? categories.find(category => category.slug === categorySlug)
     : undefined
+})
+
+const categoryProducts = computed(() => products.filter(product => product.category === selectedCategory.value?.slug))
+
+const selectedProduct = computed(() => {
+  const productId = route.query.producto
+  return typeof productId === 'string'
+    ? categoryProducts.value.find(product => product.id === productId)
+    : undefined
+})
+
+const selectedPhotoIndex = ref(0)
+
+watch(
+  () => route.query.producto,
+  () => {
+    selectedPhotoIndex.value = 0
+  }
+)
+
+const productAdviceUrl = computed(() => {
+  const productName = selectedProduct.value?.name ?? 'un modelo de lentes'
+  const message = encodeURIComponent(`Hola, quisiera recibir asesoría sobre ${productName}.`)
+  return `https://wa.me/${whatsappNumber}?text=${message}`
 })
 
 const steps = [
@@ -279,56 +392,167 @@ const steps = [
       </div>
 
       <div
-        v-if="selectedCategory"
-        id="categoria"
-        class="category-detail"
+        v-if="selectedCategory && selectedProduct"
+        id="producto"
+        class="product-detail"
       >
-        <div
-          class="category-detail-image"
-          :class="{ 'category-product': selectedCategory.imageFit === 'contain' }"
-        >
-          <img
-            :src="selectedCategory.image"
-            :alt="selectedCategory.imageAlt"
+        <div class="product-gallery">
+          <div class="product-main-photo">
+            <img
+              :src="selectedProduct.images[selectedPhotoIndex]?.src"
+              :alt="selectedProduct.images[selectedPhotoIndex]?.alt"
+            >
+            <span class="product-reference-label">
+              <UIcon
+                name="i-lucide-image"
+                aria-hidden="true"
+              />
+              Imagen de referencia
+            </span>
+          </div>
+          <div
+            class="product-thumbnails"
+            aria-label="Foto principal y tres imágenes adicionales de referencia"
           >
-          <span class="category-image-shade" />
-          <span class="category-photo-label">
+            <button
+              v-for="(photo, index) in selectedProduct.images"
+              :key="photo.alt"
+              class="product-thumbnail"
+              :class="{ 'is-selected': selectedPhotoIndex === index }"
+              type="button"
+              :aria-label="`Mostrar foto ${index + 1}: ${photo.alt}`"
+              :aria-pressed="selectedPhotoIndex === index"
+              @click="selectedPhotoIndex = index"
+            >
+              <img
+                :src="photo.src"
+                :alt="photo.alt"
+              >
+              <span>{{ index === 0 ? 'Principal' : `Foto ${index + 1}` }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="product-detail-copy">
+          <NuxtLink
+            class="product-back-link"
+            :to="{ path: '/lentes', query: { categoria: selectedCategory.slug }, hash: '#catalogo' }"
+          >
             <UIcon
-              name="i-lucide-glasses"
+              name="i-lucide-arrow-left"
               aria-hidden="true"
             />
-            {{ selectedCategory.category }}
-          </span>
-        </div>
-        <div class="category-detail-copy">
+            Volver a {{ selectedCategory.category }}
+          </NuxtLink>
           <p class="section-eyebrow">
-            Categoría seleccionada
+            {{ selectedCategory.category }} · {{ selectedProduct.subtitle }}
           </p>
-          <h3>{{ selectedCategory.title }}</h3>
-          <p>{{ selectedCategory.description }}</p>
-          <p class="category-detail-note">
-            Los modelos, colores, graduaciones y tratamientos disponibles se confirman con el equipo.
+          <h3>{{ selectedProduct.name }}</h3>
+          <p class="product-description">
+            {{ selectedProduct.description }}
+          </p>
+          <div class="product-detail-spec">
+            <span class="spec-icon">
+              <UIcon
+                name="i-lucide-glasses"
+                aria-hidden="true"
+              />
+            </span>
+            <span>
+              <strong>{{ selectedProduct.material }}</strong>
+              <small>Modelo de muestra · Consulta opciones en clínica</small>
+            </span>
+          </div>
+          <p class="product-detail-note">
+            Las imágenes son ilustrativas. Modelo, existencia, color y compatibilidad con graduación se confirman con el equipo.
           </p>
           <div class="category-detail-actions">
-            <NuxtLink
+            <a
               class="lenses-button primary-button"
-              :to="{ path: '/cotizar', query: { categoria: selectedCategory.slug } }"
+              :href="productAdviceUrl"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              Cotizar mis lentes
+              <UIcon
+                name="i-lucide-message-circle"
+                aria-hidden="true"
+              />
+              Consultar este modelo
               <UIcon
                 name="i-lucide-arrow-up-right"
                 aria-hidden="true"
               />
-            </NuxtLink>
+            </a>
             <NuxtLink
               class="explore-link"
-              to="/lentes#catalogo"
+              :to="{ path: '/cotizar', query: { categoria: selectedCategory.slug } }"
             >
-              Ver todas las categorías
+              Solicitar cotización
             </NuxtLink>
           </div>
         </div>
       </div>
+
+      <template v-else-if="selectedCategory">
+        <div class="selected-category-heading">
+          <NuxtLink
+            class="product-back-link"
+            to="/lentes#catalogo"
+          >
+            <UIcon
+              name="i-lucide-arrow-left"
+              aria-hidden="true"
+            />
+            Ver todas las categorías
+          </NuxtLink>
+          <div>
+            <p class="section-eyebrow">
+              Categoría seleccionada
+            </p>
+            <h3>{{ selectedCategory.title }}</h3>
+            <p>{{ selectedCategory.description }}</p>
+          </div>
+          <span class="category-product-count">
+            {{ categoryProducts.length }} modelos de muestra
+          </span>
+        </div>
+
+        <div class="product-grid">
+          <NuxtLink
+            v-for="product in categoryProducts"
+            :key="product.id"
+            class="product-card"
+            :to="{ path: '/lentes', query: { categoria: selectedCategory.slug, producto: product.id }, hash: '#producto' }"
+            :aria-label="`Ver detalles de ${product.name}`"
+          >
+            <div class="product-card-image">
+              <img
+                :src="product.images[0]?.src"
+                :alt="product.images[0]?.alt"
+                loading="lazy"
+              >
+              <span class="product-sample-badge">Modelo de muestra</span>
+              <span class="product-card-open">
+                <UIcon
+                  name="i-lucide-arrow-up-right"
+                  aria-hidden="true"
+                />
+              </span>
+            </div>
+            <div class="product-card-copy">
+              <span>{{ selectedCategory.category }} · {{ product.subtitle }}</span>
+              <h4>{{ product.name }}</h4>
+              <p>{{ product.description }}</p>
+              <strong>
+                Ver detalles
+                <UIcon
+                  name="i-lucide-arrow-right"
+                  aria-hidden="true"
+                />
+              </strong>
+            </div>
+          </NuxtLink>
+        </div>
+      </template>
 
       <div
         v-else
@@ -341,7 +565,7 @@ const steps = [
         >
           <NuxtLink
             class="category-card"
-            :to="{ path: '/lentes', query: { categoria: category.slug }, hash: '#categoria' }"
+            :to="{ path: '/lentes', query: { categoria: category.slug }, hash: '#catalogo' }"
             :aria-label="`Ver categoría ${category.category}`"
           >
             <div
@@ -371,18 +595,19 @@ const steps = [
                 class="category-action"
                 aria-hidden="true"
               >
-                Ver categoría
+                Ver productos
               </span>
             </div>
           </NuxtLink>
         </article>
       </div>
+
       <p class="catalog-note">
         <UIcon
           name="i-lucide-info"
           aria-hidden="true"
         />
-        Imágenes de referencia. Al publicar el catálogo de modelos, usaremos fotografías y datos de los productos que realmente maneja la clínica.
+        Los productos y fotografías de este catálogo son de muestra. Consulta en Clínica Óptica los modelos, precios y disponibilidad reales.
       </p>
     </section>
 
@@ -1892,6 +2117,639 @@ const steps = [
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+</style>
+
+<style scoped>
+.selected-category-heading {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 14px 24px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+
+.selected-category-heading .product-back-link {
+  grid-column: 1 / -1;
+  width: fit-content;
+  margin-bottom: 13px;
+}
+
+.selected-category-heading .section-eyebrow {
+  margin-bottom: 8px;
+}
+
+.selected-category-heading h3 {
+  margin: 0;
+  color: var(--lenses-navy);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 850;
+  letter-spacing: -0.045em;
+  line-height: 1.1;
+}
+
+.selected-category-heading > div > p:last-child {
+  max-width: 700px;
+  margin: 8px 0 0;
+  color: var(--lenses-gray);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.category-product-count {
+  border: 1px solid #dbe5eb;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #fff;
+  color: #557087;
+  font-size: 0.68rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.product-card {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(130px, 0.78fr) minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid #dce5eb;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #fff, #fbfcfd);
+  color: inherit;
+  box-shadow: 0 8px 22px rgb(16 43 74 / 6%);
+  text-decoration: none;
+  transition: box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.product-card:hover {
+  border-color: #b9d4e2;
+  box-shadow: 0 15px 30px rgb(16 43 74 / 11%);
+}
+
+.product-card:focus-visible,
+.product-thumbnail:focus-visible,
+.product-back-link:focus-visible {
+  outline: 3px solid rgb(36 76 115 / 35%);
+  outline-offset: 3px;
+}
+
+.product-card-image {
+  position: relative;
+  display: grid;
+  min-height: 220px;
+  overflow: hidden;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 45%, #fff, #f2f6f8 67%, #e8eef2);
+}
+
+.product-card-image img {
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  object-fit: contain;
+  transition: transform 300ms ease;
+}
+
+.product-card:hover .product-card-image img {
+  transform: scale(1.05);
+}
+
+.product-sample-badge {
+  position: absolute;
+  top: 11px;
+  left: 11px;
+  border: 1px solid rgb(255 255 255 / 78%);
+  border-radius: 999px;
+  padding: 6px 8px;
+  background: rgb(255 255 255 / 88%);
+  color: #526b7e;
+  font-size: 0.55rem;
+  font-weight: 750;
+  backdrop-filter: blur(9px);
+}
+
+.product-card-open {
+  position: absolute;
+  right: 11px;
+  bottom: 11px;
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  border: 1px solid rgb(255 255 255 / 40%);
+  border-radius: 10px;
+  background: var(--lenses-navy);
+  color: #fff;
+  box-shadow: 0 5px 13px rgb(16 43 74 / 19%);
+}
+
+.product-card-open :deep(svg) {
+  width: 16px;
+  height: 16px;
+}
+
+.product-card-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 17px;
+}
+
+.product-card-copy > span {
+  color: #577f96;
+  font-size: 0.57rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.product-card-copy h4 {
+  margin: 8px 0 0;
+  color: var(--lenses-navy);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.product-card-copy p {
+  display: -webkit-box;
+  overflow: hidden;
+  margin: 8px 0 13px;
+  color: var(--lenses-gray);
+  font-size: 0.67rem;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.product-card-copy > strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  color: #285d7d;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.product-card-copy > strong :deep(svg) {
+  width: 15px;
+  height: 15px;
+  transition: transform 160ms ease;
+}
+
+.product-card:hover .product-card-copy > strong :deep(svg) {
+  transform: translateX(3px);
+}
+
+.product-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: center;
+  border: 1px solid #dce5eb;
+  border-radius: 18px;
+  padding: clamp(17px, 2.5vw, 28px);
+  background:
+    radial-gradient(ellipse at 0 0, rgb(228 239 245 / 52%), transparent 42%),
+    linear-gradient(145deg, #fff, #fafcfd);
+  box-shadow: 0 12px 31px rgb(16 43 74 / 8%);
+}
+
+.product-gallery {
+  display: grid;
+  min-width: 0;
+  gap: 11px;
+}
+
+.product-main-photo {
+  position: relative;
+  display: grid;
+  min-height: 350px;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid #e2e9ed;
+  border-radius: 14px;
+  background:
+    radial-gradient(circle at 50% 46%, #fff 0%, #f8fafb 53%, #eaf0f3 100%);
+}
+
+.product-main-photo img {
+  width: 100%;
+  height: 100%;
+  max-height: 420px;
+  padding: clamp(15px, 3vw, 34px);
+  object-fit: contain;
+}
+
+.product-reference-label {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgb(255 255 255 / 83%);
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: rgb(255 255 255 / 88%);
+  color: #526a7b;
+  font-size: 0.59rem;
+  font-weight: 750;
+  box-shadow: 0 4px 12px rgb(16 43 74 / 7%);
+  backdrop-filter: blur(8px);
+}
+
+.product-reference-label :deep(svg) {
+  width: 14px;
+  height: 14px;
+  color: #437e9b;
+}
+
+.product-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.product-thumbnail {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  height: 91px;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid #e0e7eb;
+  border-radius: 11px;
+  padding: 4px;
+  background: linear-gradient(145deg, #fff, #f0f4f6);
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.product-thumbnail:hover {
+  border-color: #9ebfd0;
+}
+
+.product-thumbnail.is-selected {
+  border: 2px solid #397da0;
+  box-shadow: 0 0 0 3px rgb(57 125 160 / 12%);
+}
+
+.product-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-thumbnail > span {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  left: 4px;
+  border-radius: 5px;
+  padding: 3px 4px;
+  background: rgb(16 43 74 / 83%);
+  color: #fff;
+  font-size: 0.5rem;
+  font-weight: 750;
+  text-align: center;
+}
+
+.product-detail-copy {
+  min-width: 0;
+  padding: 8px 4px 8px 0;
+}
+
+.product-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 17px;
+  border: 1px solid #dbe6ec;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: rgb(255 255 255 / 82%);
+  color: #416b84;
+  font-size: 0.69rem;
+  font-weight: 750;
+  text-decoration: none;
+  box-shadow: 0 4px 11px rgb(16 43 74 / 4%);
+  transition: color 150ms ease, gap 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.product-back-link:hover {
+  gap: 10px;
+  border-color: #b9d3df;
+  color: #183f5b;
+  box-shadow: 0 7px 15px rgb(16 43 74 / 8%);
+}
+
+.product-back-link :deep(svg) {
+  width: 15px;
+  height: 15px;
+}
+
+.product-detail-copy .section-eyebrow {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 9px;
+  color: #426f8a;
+  font-size: 0.62rem;
+}
+
+.product-detail-copy h3 {
+  margin: 0;
+  color: var(--lenses-navy);
+  font-size: clamp(1.8rem, 3.1vw, 2.55rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 1.07;
+}
+
+.product-description {
+  margin: 14px 0 0;
+  color: var(--lenses-gray);
+  font-size: 0.82rem;
+  line-height: 1.72;
+}
+
+.product-detail-spec {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 19px;
+  border: 1px solid #e1e9ed;
+  border-radius: 12px;
+  padding: 11px;
+  background: linear-gradient(120deg, #f8fafb, #fff);
+}
+
+.spec-icon {
+  display: grid;
+  width: 37px;
+  height: 37px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 11px;
+  background: #eaf2f6;
+  color: #356f8c;
+}
+
+.spec-icon :deep(svg) {
+  width: 19px;
+  height: 19px;
+}
+
+.product-detail-spec > span:last-child {
+  display: grid;
+  gap: 4px;
+}
+
+.product-detail-spec strong {
+  color: #264b65;
+  font-size: 0.69rem;
+}
+
+.product-detail-spec small {
+  color: #788895;
+  font-size: 0.61rem;
+  line-height: 1.45;
+}
+
+.product-detail-note {
+  margin: 15px 0 0;
+  border-left: 2px solid #85afc4;
+  padding: 2px 0 2px 11px;
+  color: #687d8d;
+  font-size: 0.67rem;
+  line-height: 1.6;
+}
+
+.product-detail-copy .category-detail-actions {
+  align-items: flex-start;
+  gap: 13px 18px;
+  margin-top: 21px;
+}
+
+.product-detail-copy .lenses-button {
+  gap: 8px;
+  font-size: 0.7rem;
+}
+
+.product-detail-copy .explore-link {
+  min-height: 40px;
+  border: 1px solid #bfd2de;
+  border-radius: 9px;
+  padding: 9px 14px;
+  background: linear-gradient(135deg, #fff, #f2f7fa);
+  color: #244c73;
+  font-size: 0.7rem;
+  font-weight: 800;
+  box-shadow: 0 5px 13px rgb(16 43 74 / 7%);
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease, color 160ms ease;
+}
+
+.product-detail-copy .explore-link:hover {
+  border-color: #8eafc2;
+  background: #eaf3f7;
+  color: #173b5d;
+  text-decoration: none;
+  box-shadow: 0 7px 16px rgb(16 43 74 / 11%);
+}
+
+.product-detail-copy .explore-link:focus-visible {
+  outline: 3px solid rgb(36 76 115 / 35%);
+  outline-offset: 3px;
+}
+
+.catalog-note {
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: rgb(237 243 246 / 73%);
+}
+
+@media (max-width: 980px) {
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card {
+    grid-template-columns: minmax(170px, 0.72fr) minmax(0, 1fr);
+  }
+
+  .product-detail {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 25px;
+  }
+
+  .product-main-photo {
+    min-height: 300px;
+  }
+
+  .product-detail-copy h3 {
+    font-size: clamp(1.7rem, 3.5vw, 2.2rem);
+  }
+}
+
+@media (max-width: 700px) {
+  .selected-category-heading {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 13px;
+    text-align: center;
+  }
+
+  .selected-category-heading .product-back-link {
+    grid-column: auto;
+    margin: 0 auto 4px;
+  }
+
+  .selected-category-heading h3 {
+    font-size: 1.6rem;
+  }
+
+  .selected-category-heading > div > p:last-child {
+    font-size: 0.7rem;
+  }
+
+  .category-product-count {
+    justify-self: center;
+    font-size: 0.63rem;
+  }
+
+  .product-grid {
+    gap: 13px;
+  }
+
+  .product-card {
+    grid-template-columns: 1fr;
+    border-radius: 14px;
+  }
+
+  .product-card-image {
+    min-height: 215px;
+    max-height: 250px;
+  }
+
+  .product-card-image img {
+    padding: 18px;
+  }
+
+  .product-card-copy {
+    min-height: 169px;
+    padding: 15px;
+  }
+
+  .product-card-copy h4 {
+    font-size: 0.98rem;
+  }
+
+  .product-card-copy p {
+    margin-block: 7px 11px;
+    font-size: 0.65rem;
+  }
+
+  .product-detail {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    border-radius: 16px;
+    padding: 13px;
+  }
+
+  .product-gallery {
+    gap: 9px;
+  }
+
+  .product-main-photo {
+    min-height: clamp(230px, 69vw, 345px);
+    border-radius: 12px;
+  }
+
+  .product-main-photo img {
+    max-height: 350px;
+    padding: 18px;
+  }
+
+  .product-thumbnails {
+    gap: 8px;
+  }
+
+  .product-thumbnail {
+    height: clamp(68px, 21vw, 92px);
+    border-radius: 9px;
+  }
+
+  .product-detail-copy {
+    padding: 0 5px 7px;
+    text-align: center;
+  }
+
+  .product-back-link {
+    margin-bottom: 16px;
+  }
+
+  .product-detail-copy .section-eyebrow {
+    margin-inline: auto;
+    justify-content: center;
+    margin-bottom: 8px;
+  }
+
+  .product-detail-copy h3 {
+    font-size: clamp(1.65rem, 7.5vw, 2.1rem);
+  }
+
+  .product-description {
+    font-size: 0.75rem;
+  }
+
+  .product-detail-spec {
+    text-align: left;
+  }
+
+  .product-detail-note {
+    border-top: 1px solid #dce4ea;
+    border-left: 0;
+    padding: 11px 0 0;
+    font-size: 0.64rem;
+  }
+
+  .product-detail-copy .category-detail-actions {
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .product-detail-copy .lenses-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .product-detail-copy .explore-link {
+    min-height: 40px;
+    padding: 9px 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card,
+  .product-card-image img,
+  .product-card-copy > strong :deep(svg),
+  .product-thumbnail,
+  .product-back-link {
+    transition: none;
   }
 }
 </style>
