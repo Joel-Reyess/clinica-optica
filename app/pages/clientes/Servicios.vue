@@ -110,6 +110,62 @@ const products = [
     ]
   },
   {
+    id: 'clasico-heritage',
+    category: 'clasicos',
+    name: 'Armazón clásico Heritage',
+    subtitle: 'Elegancia discreta',
+    description: 'Un estilo de inspiración tradicional para quienes prefieren líneas sobrias. Los materiales, colores y opciones de graduación se confirman en clínica.',
+    material: 'Estilo tradicional',
+    images: [
+      { src: classicFramesImage, alt: 'Armazón clásico oscuro de referencia' },
+      { src: lifestyleFramesImage, alt: 'Armazón clásico en exhibición' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'clasico-sereno',
+    category: 'clasicos',
+    name: 'Armazón clásico Sereno',
+    subtitle: 'Silueta versátil',
+    description: 'Una propuesta de líneas sencillas pensada como referencia para el uso cotidiano. Consulta las opciones reales y su compatibilidad con tu receta.',
+    material: 'Diseño versátil',
+    images: [
+      { src: lifestyleFramesImage, alt: 'Armazón de silueta clásica en exhibición' },
+      { src: classicFramesImage, alt: 'Armazón oscuro de estilo clásico' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'clasico-legado',
+    category: 'clasicos',
+    name: 'Armazón clásico Legado',
+    subtitle: 'Inspiración vintage',
+    description: 'Una propuesta clásica con carácter atemporal. Consulta en clínica las formas, acabados y opciones compatibles con tu receta.',
+    material: 'Diseño vintage',
+    images: [
+      { src: classicFramesImage, alt: 'Armazón clásico de referencia' },
+      { src: lifestyleFramesImage, alt: 'Armazón clásico en exhibición' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'clasico-equilibrio',
+    category: 'clasicos',
+    name: 'Armazón clásico Equilibrio',
+    subtitle: 'Sencillo y versátil',
+    description: 'Un modelo ilustrativo de líneas sobrias para distintas ocasiones. Disponibilidad, color y graduación se confirman en clínica.',
+    material: 'Línea versátil',
+    images: [
+      { src: lifestyleFramesImage, alt: 'Armazón sobrio de referencia en exhibición' },
+      { src: classicFramesImage, alt: 'Armazón oscuro de estilo clásico' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
     id: 'moderno-urbano',
     category: 'modernos',
     name: 'Armazón moderno Urbano',
@@ -131,10 +187,66 @@ const products = [
     description: 'Un modelo de muestra con una silueta contemporánea. Acércate para conocer diseños reales, colores y opciones adecuadas para tu graduación.',
     material: 'Línea moderna',
     images: [
-      { src: modernFramesImage, alt: 'Vista principal del armazón moderno Actitud' },
-      { src: lifestyleFramesImage, alt: 'Armazón moderno de referencia en exhibición' },
+      { src: classicFramesImage, alt: 'Armazón negro de estilo contemporáneo de referencia' },
+      { src: lifestyleFramesImage, alt: 'Otra propuesta de armazón moderno en exhibición' },
       { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
       { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'moderno-aura',
+    category: 'modernos',
+    name: 'Armazón moderno Aura',
+    subtitle: 'Líneas ligeras',
+    description: 'Una referencia de estilo contemporáneo con una apariencia ligera. El armazón y las micas adecuadas se eligen según tu graduación.',
+    material: 'Diseño contemporáneo',
+    images: [
+      { src: lifestyleFramesImage, alt: 'Armazón contemporáneo de referencia' },
+      { src: modernFramesImage, alt: 'Armazón moderno de líneas definidas' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'moderno-norte',
+    category: 'modernos',
+    name: 'Armazón moderno Norte',
+    subtitle: 'Estilo urbano',
+    description: 'Una propuesta de muestra para explorar formas actuales y combinables. Consulta en clínica por colores, modelos reales y disponibilidad.',
+    material: 'Estilo urbano',
+    images: [
+      { src: classicFramesImage, alt: 'Armazón moderno oscuro de referencia' },
+      { src: lifestyleFramesImage, alt: 'Armazón en exhibición' },
+      { src: modernFramesImage, alt: 'Otra propuesta de armazón moderno' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' }
+    ]
+  },
+  {
+    id: 'moderno-pulso',
+    category: 'modernos',
+    name: 'Armazón moderno Pulso',
+    subtitle: 'Geometría actual',
+    description: 'Una referencia de diseño actual para explorar siluetas con personalidad. Consulta modelos reales y opciones para tu graduación.',
+    material: 'Diseño geométrico',
+    images: [
+      { src: modernFramesImage, alt: 'Armazón de diseño moderno de referencia' },
+      { src: classicFramesImage, alt: 'Armazón oscuro de referencia' },
+      { src: lifestyleFramesImage, alt: 'Armazón en exhibición' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' }
+    ]
+  },
+  {
+    id: 'moderno-esencia',
+    category: 'modernos',
+    name: 'Armazón moderno Esencia',
+    subtitle: 'Diseño contemporáneo',
+    description: 'Una propuesta de muestra que combina una apariencia limpia con un estilo actual. La graduación se define según tu receta.',
+    material: 'Línea contemporánea',
+    images: [
+      { src: classicFramesImage, alt: 'Armazón contemporáneo oscuro de referencia' },
+      { src: lifestyleFramesImage, alt: 'Armazón de referencia en exhibición' },
+      { src: modernFramesImage, alt: 'Otra silueta moderna de referencia' },
+      { src: safetyStoreImage, alt: 'Selección de armazones en Clínica Óptica' }
     ]
   },
   {
@@ -164,6 +276,62 @@ const products = [
       { src: safetyStoreImage, alt: 'Exhibición de opciones de lentes en Clínica Óptica' },
       { src: evaluationImage, alt: 'Espacio de asesoría visual' }
     ]
+  },
+  {
+    id: 'seguridad-laboral',
+    category: 'seguridad-graduada',
+    name: 'Lente de seguridad Laboral',
+    subtitle: 'Protección cotidiana',
+    description: 'Una referencia para conversar sobre protección ocular en el trabajo. El nivel de protección y la opción graduada se confirman según tu actividad.',
+    material: 'Protección visual',
+    images: [
+      { src: classicFramesImage, alt: 'Lentes protectores oscuros de referencia' },
+      { src: safetyGlassesImage, alt: 'Lentes de seguridad de referencia' },
+      { src: safetyStoreImage, alt: 'Exhibición de opciones de lentes en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'seguridad-activa',
+    category: 'seguridad-graduada',
+    name: 'Lente de seguridad Activa',
+    subtitle: 'Asesoría para tu actividad',
+    description: 'Modelo ilustrativo para explorar alternativas de protección. La compatibilidad con tu receta y los requisitos de seguridad requieren valoración.',
+    material: 'Uso profesional',
+    images: [
+      { src: modernFramesImage, alt: 'Lentes de protección de referencia' },
+      { src: classicFramesImage, alt: 'Otra opción de lentes protectores de referencia' },
+      { src: safetyStoreImage, alt: 'Exhibición de opciones de lentes en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'seguridad-resguardo',
+    category: 'seguridad-graduada',
+    name: 'Lente de seguridad Resguardo',
+    subtitle: 'Protección para el trabajo',
+    description: 'Una referencia visual para consultar alternativas de protección ocular. La certificación y graduación requieren confirmación en clínica.',
+    material: 'Protección profesional',
+    images: [
+      { src: safetyGlassesImage, alt: 'Lentes de protección de referencia' },
+      { src: classicFramesImage, alt: 'Otra alternativa de protección de referencia' },
+      { src: safetyStoreImage, alt: 'Exhibición de opciones de lentes en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
+  },
+  {
+    id: 'seguridad-enfoque',
+    category: 'seguridad-graduada',
+    name: 'Lente de seguridad Enfoque',
+    subtitle: 'Ajuste según tu actividad',
+    description: 'Un modelo ilustrativo para iniciar una consulta sobre protección visual graduada. Las especificaciones dependen de tu entorno laboral.',
+    material: 'Asesoría de seguridad',
+    images: [
+      { src: modernFramesImage, alt: 'Lentes de seguridad de referencia' },
+      { src: safetyGlassesImage, alt: 'Otra opción protectora de referencia' },
+      { src: safetyStoreImage, alt: 'Exhibición de opciones de lentes en Clínica Óptica' },
+      { src: evaluationImage, alt: 'Espacio de asesoría visual' }
+    ]
   }
 ]
 
@@ -175,6 +343,91 @@ const selectedCategory = computed(() => {
 })
 
 const categoryProducts = computed(() => products.filter(product => product.category === selectedCategory.value?.slug))
+
+const productCarousel = ref<HTMLElement | null>(null)
+const canScrollProductsBackward = ref(false)
+const canScrollProductsForward = ref(false)
+
+function updateProductCarouselState() {
+  const carousel = productCarousel.value
+
+  if (!carousel) {
+    canScrollProductsBackward.value = false
+    canScrollProductsForward.value = false
+    return
+  }
+
+  canScrollProductsBackward.value = carousel.scrollLeft > 2
+  canScrollProductsForward.value = carousel.scrollLeft + carousel.clientWidth < carousel.scrollWidth - 2
+}
+
+function scrollProductCarousel(direction: -1 | 1) {
+  const carousel = productCarousel.value
+  const cards = carousel?.querySelectorAll<HTMLElement>('.product-card')
+  const firstCard = cards?.[0]
+
+  if (!carousel || !cards?.length || !firstCard) return
+
+  const styles = getComputedStyle(carousel)
+  const gap = Number.parseFloat(styles.columnGap || styles.gap) || 0
+  const paddingLeft = Number.parseFloat(styles.paddingLeft) || 0
+  const paddingRight = Number.parseFloat(styles.paddingRight) || 0
+  const padding = paddingLeft + paddingRight
+  const cardStep = firstCard.getBoundingClientRect().width + gap
+  const carouselContentLeft = carousel.getBoundingClientRect().left + carousel.clientLeft + paddingLeft
+  const requestedCardsPerPage = window.matchMedia('(max-width: 700px)').matches ? 1 : 3
+  const visibleCards = Math.max(1, Math.min(
+    requestedCardsPerPage,
+    Math.round((carousel.clientWidth - padding + gap) / cardStep)
+  ))
+  const currentStart = Array.from(cards).reduce((closestIndex, card, index) => {
+    const cardLeft = card.getBoundingClientRect().left
+    const currentCardLeft = cards[closestIndex]?.getBoundingClientRect().left ?? cardLeft
+    return Math.abs(cardLeft - carouselContentLeft) < Math.abs(currentCardLeft - carouselContentLeft)
+      ? index
+      : closestIndex
+  }, 0)
+  const lastFullPageStart = Math.max(0, cards.length - visibleCards)
+  const nextStart = direction > 0
+    ? Math.min(currentStart + visibleCards, lastFullPageStart)
+    : Math.floor(Math.max(0, currentStart - 1) / visibleCards) * visibleCards
+  const targetCard = cards[nextStart]
+
+  if (!targetCard) return
+
+  const targetScrollLeft = carousel.scrollLeft
+    + targetCard.getBoundingClientRect().left
+    - carouselContentLeft
+
+  carousel.scrollTo({
+    left: Math.max(0, Math.min(carousel.scrollWidth - carousel.clientWidth, targetScrollLeft)),
+    behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.visibilityState === 'hidden'
+      ? 'auto'
+      : 'smooth'
+  })
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updateProductCarouselState, { passive: true })
+  updateProductCarouselState()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateProductCarouselState)
+})
+
+watch(
+  () => [route.query.categoria, route.query.producto],
+  async () => {
+    await nextTick()
+
+    if (!productCarousel.value) return
+
+    productCarousel.value.scrollLeft = 0
+    updateProductCarouselState()
+  },
+  { immediate: true }
+)
 
 const selectedProduct = computed(() => {
   const productId = route.query.producto
@@ -386,8 +639,14 @@ const steps = [
             Explora el catálogo por categoría.
           </h2>
         </div>
-        <p>
-          Descubre algunas opciones y pide asesoría para conocer modelos, disponibilidad y detalles.
+        <p class="catalog-heading-note">
+          <span class="catalog-heading-note-icon">
+            <UIcon
+              name="i-lucide-scan-eye"
+              aria-hidden="true"
+            />
+          </span>
+          <span>Descubre algunas opciones y pide asesoría para conocer modelos, disponibilidad y detalles.</span>
         </p>
       </div>
 
@@ -511,46 +770,103 @@ const steps = [
             <h3>{{ selectedCategory.title }}</h3>
             <p>{{ selectedCategory.description }}</p>
           </div>
-          <span class="category-product-count">
-            {{ categoryProducts.length }} modelos de muestra
-          </span>
-        </div>
-
-        <div class="product-grid">
-          <NuxtLink
-            v-for="product in categoryProducts"
-            :key="product.id"
-            class="product-card"
-            :to="{ path: '/lentes', query: { categoria: selectedCategory.slug, producto: product.id }, hash: '#producto' }"
-            :aria-label="`Ver detalles de ${product.name}`"
-          >
-            <div class="product-card-image">
-              <img
-                :src="product.images[0]?.src"
-                :alt="product.images[0]?.alt"
-                loading="lazy"
+          <div class="selected-category-meta">
+            <span class="category-product-count">
+              <UIcon
+                name="i-lucide-glasses"
+                aria-hidden="true"
+              />
+              {{ categoryProducts.length }} modelos de muestra
+            </span>
+            <div
+              class="product-carousel-controls"
+              role="group"
+              aria-label="Controles del carrusel de modelos"
+            >
+              <button
+                class="product-carousel-arrow"
+                type="button"
+                aria-label="Ver modelos anteriores"
+                :disabled="!canScrollProductsBackward"
+                @click="scrollProductCarousel(-1)"
               >
-              <span class="product-sample-badge">Modelo de muestra</span>
-              <span class="product-card-open">
                 <UIcon
-                  name="i-lucide-arrow-up-right"
+                  name="i-lucide-arrow-left"
                   aria-hidden="true"
                 />
-              </span>
-            </div>
-            <div class="product-card-copy">
-              <span>{{ selectedCategory.category }} · {{ product.subtitle }}</span>
-              <h4>{{ product.name }}</h4>
-              <p>{{ product.description }}</p>
-              <strong>
-                Ver detalles
+              </button>
+              <button
+                class="product-carousel-arrow"
+                type="button"
+                aria-label="Ver más modelos"
+                :disabled="!canScrollProductsForward"
+                @click="scrollProductCarousel(1)"
+              >
                 <UIcon
                   name="i-lucide-arrow-right"
                   aria-hidden="true"
                 />
-              </strong>
+              </button>
             </div>
-          </NuxtLink>
+          </div>
+        </div>
+
+        <div class="product-carousel-stage">
+          <div
+            ref="productCarousel"
+            class="product-carousel"
+            role="region"
+            aria-roledescription="carrusel"
+            :aria-label="`Modelos de ${selectedCategory.category}`"
+            tabindex="0"
+            @scroll.passive="updateProductCarouselState"
+          >
+            <NuxtLink
+              v-for="(product, index) in categoryProducts"
+              :key="product.id"
+              class="product-card"
+              :to="{ path: '/lentes', query: { categoria: selectedCategory.slug, producto: product.id }, hash: '#producto' }"
+              :aria-label="`Ver detalles de ${product.name}, modelo ${index + 1} de ${categoryProducts.length}`"
+            >
+              <div class="product-card-image">
+                <img
+                  :src="product.images[0]?.src"
+                  :alt="product.images[0]?.alt"
+                  loading="lazy"
+                >
+                <span class="product-sample-badge">
+                  <UIcon
+                    name="i-lucide-sparkles"
+                    aria-hidden="true"
+                  />
+                  Modelo de muestra
+                </span>
+                <span class="product-card-open">
+                  <UIcon
+                    name="i-lucide-arrow-up-right"
+                    aria-hidden="true"
+                  />
+                </span>
+              </div>
+              <div class="product-card-copy">
+                <div class="product-card-heading">
+                  <span class="product-card-eyebrow">{{ selectedCategory.category }}</span>
+                  <span class="product-card-subtitle">{{ product.subtitle }}</span>
+                </div>
+                <h4>{{ product.name }}</h4>
+                <p>{{ product.description }}</p>
+                <div class="product-card-footer">
+                  <strong>Explorar modelo</strong>
+                  <span class="product-card-arrow">
+                    <UIcon
+                      name="i-lucide-arrow-right"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
+              </div>
+            </NuxtLink>
+          </div>
         </div>
       </template>
 
@@ -2124,20 +2440,26 @@ const steps = [
 <style scoped>
 .selected-category-heading {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 14px 24px;
-  align-items: end;
-  margin-bottom: 20px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 24px;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #dbe5eb;
+  padding-bottom: 16px;
 }
 
 .selected-category-heading .product-back-link {
   grid-column: 1 / -1;
   width: fit-content;
-  margin-bottom: 13px;
+  margin: 0 0 12px;
+  border-color: #dce6ec;
+  padding: 7px 11px;
+  background: rgb(255 255 255 / 78%);
+  box-shadow: 0 3px 9px rgb(16 43 74 / 4%);
 }
 
 .selected-category-heading .section-eyebrow {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .selected-category-heading h3 {
@@ -2146,51 +2468,144 @@ const steps = [
   font-size: clamp(1.45rem, 3vw, 2rem);
   font-weight: 850;
   letter-spacing: -0.045em;
-  line-height: 1.1;
+  line-height: 1.08;
 }
 
 .selected-category-heading > div > p:last-child {
   max-width: 700px;
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   color: var(--lenses-gray);
-  font-size: 0.78rem;
-  line-height: 1.6;
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.selected-category-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
 }
 
 .category-product-count {
-  border: 1px solid #dbe5eb;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #d7e3ea;
   border-radius: 999px;
-  padding: 8px 12px;
-  background: #fff;
-  color: #557087;
-  font-size: 0.68rem;
+  padding: 8px 11px;
+  background: linear-gradient(145deg, #fff, #f4f8fa);
+  color: #47677c;
+  font-size: 0.65rem;
   font-weight: 750;
   white-space: nowrap;
+  box-shadow: 0 4px 11px rgb(16 43 74 / 5%);
 }
 
-.product-grid {
+.category-product-count :deep(svg) {
+  width: 14px;
+  height: 14px;
+  color: #57829a;
+}
+
+.product-carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.product-carousel-arrow {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 39px;
+  height: 39px;
+  place-items: center;
+  border: 1px solid #d7e2e9;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #fff, #f0f5f8);
+  color: #244c73;
+  box-shadow: 0 4px 10px rgb(16 43 74 / 6%);
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease, transform 180ms ease;
+}
+
+.product-carousel-arrow :deep(svg) {
+  width: 18px;
+  height: 18px;
+}
+
+.product-carousel-arrow:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: #244c73;
+  background: linear-gradient(145deg, #315f7e, #193f5f);
+  color: #fff;
+  box-shadow: 0 7px 15px rgb(16 43 74 / 17%);
+}
+
+.product-carousel-arrow:focus-visible,
+.product-carousel:focus-visible {
+  outline: 3px solid rgb(36 76 115 / 35%);
+  outline-offset: 3px;
+}
+
+.product-carousel-arrow:disabled {
+  background: transparent;
+  color: #a7b4bc;
+  opacity: 0.58;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.product-carousel-stage {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e2eaf0;
+  border-radius: 23px;
+  padding: 7px;
+  background:
+    radial-gradient(ellipse at 8% 0%, rgb(223 237 245 / 75%), transparent 42%),
+    linear-gradient(145deg, #f6f9fb, #eef3f6);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 85%);
+}
+
+.product-carousel {
+  display: flex;
+  overflow-x: auto;
   gap: 18px;
+  padding: 10px 9px 13px;
+  scroll-padding-inline: 9px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.product-carousel::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  background: transparent;
+  -webkit-appearance: none;
 }
 
 .product-card {
   display: grid;
+  flex: 0 0 calc((100% - 36px) / 3);
   min-width: 0;
-  grid-template-columns: minmax(130px, 0.78fr) minmax(0, 1fr);
+  grid-template-rows: 206px minmax(144px, auto);
   overflow: hidden;
-  border: 1px solid #dce5eb;
-  border-radius: 15px;
-  background: linear-gradient(145deg, #fff, #fbfcfd);
+  border: 1px solid rgb(214 226 234 / 92%);
+  border-radius: 19px;
+  background: linear-gradient(150deg, #fff 0%, #fff 68%, #f6f9fb 100%);
   color: inherit;
-  box-shadow: 0 8px 22px rgb(16 43 74 / 6%);
+  box-shadow: 0 10px 24px rgb(16 43 74 / 7%), 0 1px 2px rgb(16 43 74 / 4%);
   text-decoration: none;
-  transition: box-shadow 180ms ease, border-color 180ms ease;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  scroll-snap-align: start;
 }
 
 .product-card:hover {
-  border-color: #b9d4e2;
-  box-shadow: 0 15px 30px rgb(16 43 74 / 11%);
+  transform: translateY(-4px);
+  border-color: #a9c6d6;
+  box-shadow: 0 18px 36px rgb(16 43 74 / 13%), 0 2px 5px rgb(16 43 74 / 5%);
 }
 
 .product-card:focus-visible,
@@ -2203,57 +2618,91 @@ const steps = [
 .product-card-image {
   position: relative;
   display: grid;
-  min-height: 220px;
   overflow: hidden;
   place-items: center;
   background:
-    radial-gradient(circle at 50% 45%, #fff, #f2f6f8 67%, #e8eef2);
+    radial-gradient(ellipse at 52% 50%, #fff 0%, #f4f8fa 54%, #e8f0f4 100%);
+}
+
+.product-card-image::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 158px;
+  height: 158px;
+  border: 1px solid rgb(76 119 145 / 12%);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 17px rgb(255 255 255 / 35%), 0 0 0 36px rgb(76 119 145 / 4%);
 }
 
 .product-card-image img {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  padding: 15px;
+  padding: 20px 24px;
   object-fit: contain;
-  transition: transform 300ms ease;
+  transition: transform 380ms cubic-bezier(0.2, 0.75, 0.25, 1);
 }
 
 .product-card:hover .product-card-image img {
-  transform: scale(1.05);
+  transform: scale(1.065);
 }
 
 .product-sample-badge {
   position: absolute;
+  z-index: 2;
   top: 11px;
   left: 11px;
-  border: 1px solid rgb(255 255 255 / 78%);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgb(255 255 255 / 88%);
   border-radius: 999px;
-  padding: 6px 8px;
-  background: rgb(255 255 255 / 88%);
-  color: #526b7e;
-  font-size: 0.55rem;
+  padding: 7px 10px;
+  background: rgb(255 255 255 / 82%);
+  color: #49677b;
+  font-size: 0.58rem;
   font-weight: 750;
-  backdrop-filter: blur(9px);
+  box-shadow: 0 4px 13px rgb(16 43 74 / 7%);
+  backdrop-filter: blur(12px);
+}
+
+.product-sample-badge :deep(svg) {
+  width: 12px;
+  height: 12px;
+  color: #57839a;
 }
 
 .product-card-open {
   position: absolute;
+  z-index: 2;
   right: 11px;
   bottom: 11px;
   display: grid;
-  width: 31px;
-  height: 31px;
+  width: 38px;
+  height: 38px;
   place-items: center;
-  border: 1px solid rgb(255 255 255 / 40%);
-  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 55%);
+  border-radius: 13px;
   background: var(--lenses-navy);
   color: #fff;
-  box-shadow: 0 5px 13px rgb(16 43 74 / 19%);
+  box-shadow: 0 7px 17px rgb(16 43 74 / 22%);
+  transition: transform 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
 }
 
 .product-card-open :deep(svg) {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+}
+
+.product-card:hover .product-card-open {
+  transform: translate(2px, -2px);
+  background: #245477;
+  box-shadow: 0 9px 20px rgb(16 43 74 / 25%);
 }
 
 .product-card-copy {
@@ -2261,56 +2710,108 @@ const steps = [
   min-width: 0;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
-  padding: 17px;
+  justify-content: flex-start;
+  padding: 15px 16px;
 }
 
-.product-card-copy > span {
-  color: #577f96;
+.product-card-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.product-card-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #386d8b;
   font-size: 0.57rem;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
+.product-card-eyebrow::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5c92ad;
+  box-shadow: 0 0 0 3px rgb(92 146 173 / 12%);
+  content: "";
+}
+
+.product-card-subtitle {
+  color: #81909b;
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
 .product-card-copy h4 {
   margin: 8px 0 0;
   color: var(--lenses-navy);
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.25;
+  font-size: 0.92rem;
+  font-weight: 850;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
 }
 
 .product-card-copy p {
   display: -webkit-box;
   overflow: hidden;
-  margin: 8px 0 13px;
-  color: var(--lenses-gray);
+  margin: 6px 0 9px;
+  color: #637785;
   font-size: 0.67rem;
-  line-height: 1.55;
+  line-height: 1.5;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
 }
 
-.product-card-copy > strong {
-  display: inline-flex;
+.product-card-footer {
+  display: flex;
+  width: 100%;
   align-items: center;
-  gap: 7px;
+  justify-content: space-between;
+  gap: 10px;
   margin-top: auto;
-  color: #285d7d;
-  font-size: 0.68rem;
-  font-weight: 800;
+  border-top: 1px solid #e7edf1;
+  padding-top: 8px;
 }
 
-.product-card-copy > strong :deep(svg) {
+.product-card-footer > strong {
+  color: #315e79;
+  font-size: 0.65rem;
+  font-weight: 800;
+  transition: color 160ms ease;
+}
+
+.product-card-arrow {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #d6e2e9;
+  border-radius: 50%;
+  background: #f8fafb;
+  color: #315e79;
+  transition: transform 180ms ease, color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.product-card-arrow :deep(svg) {
   width: 15px;
   height: 15px;
-  transition: transform 160ms ease;
 }
 
-.product-card:hover .product-card-copy > strong :deep(svg) {
+.product-card:hover .product-card-footer > strong {
+  color: #173f5f;
+}
+
+.product-card:hover .product-card-arrow {
   transform: translateX(3px);
+  border-color: var(--lenses-navy);
+  background: var(--lenses-navy);
+  color: #fff;
 }
 
 .product-detail {
@@ -2581,13 +3082,94 @@ const steps = [
   background: rgb(237 243 246 / 73%);
 }
 
+.catalog-section .catalog-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.48fr);
+  align-items: center;
+  gap: clamp(22px, 4vw, 54px);
+  margin-bottom: 22px;
+}
+
+.catalog-section .catalog-heading > div {
+  min-width: 0;
+}
+
+.catalog-section .catalog-heading h2 {
+  max-width: 660px;
+  margin: 0;
+  color: var(--lenses-navy);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 0.99;
+}
+
+.catalog-section .catalog-heading-note {
+  display: flex;
+  max-width: 390px;
+  align-items: flex-start;
+  gap: 13px;
+  margin: 0 0 0 auto;
+  border: 1px solid #d9e5eb;
+  border-left: 3px solid #4c7f9b;
+  border-radius: 14px;
+  padding: 16px 17px;
+  background:
+    radial-gradient(circle at 100% 0, rgb(219 235 243 / 62%), transparent 55%),
+    linear-gradient(145deg, #fff, #f6f9fb);
+  color: #557083;
+  font-size: 0.76rem;
+  line-height: 1.6;
+  box-shadow: 0 8px 21px rgb(16 43 74 / 5%);
+}
+
+.catalog-heading-note-icon {
+  display: grid;
+  width: 35px;
+  height: 35px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #d7e5ec;
+  border-radius: 11px;
+  background: #edf4f7;
+  color: #3f718d;
+}
+
+.catalog-heading-note-icon :deep(svg) {
+  width: 17px;
+  height: 17px;
+}
+
+.product-card {
+  flex: 0 0 calc((100% - 36px) / 3);
+}
+
 @media (max-width: 980px) {
-  .product-grid {
-    grid-template-columns: 1fr;
+  .catalog-section .catalog-heading {
+    grid-template-columns: minmax(0, 1fr) minmax(220px, 0.62fr);
+    gap: 20px;
+    margin-bottom: 19px;
+    text-align: left;
+  }
+
+  .catalog-section .catalog-heading h2 {
+    font-size: clamp(1.9rem, 4.2vw, 2.65rem);
+  }
+
+  .catalog-section .catalog-heading-note {
+    margin: 0 0 0 auto;
+    border-top: 1px solid #d9e5eb;
+    border-left: 3px solid #4c7f9b;
+    padding: 13px 14px;
+    text-align: left;
+  }
+
+  .product-carousel {
+    gap: 16px;
   }
 
   .product-card {
-    grid-template-columns: minmax(170px, 0.72fr) minmax(0, 1fr);
+    flex: 0 0 calc((100% - 32px) / 3);
   }
 
   .product-detail {
@@ -2607,59 +3189,114 @@ const steps = [
 @media (max-width: 700px) {
   .selected-category-heading {
     grid-template-columns: 1fr;
-    align-items: start;
-    gap: 13px;
-    text-align: center;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 13px;
+    padding-bottom: 13px;
+    text-align: left;
+  }
+
+  .catalog-section .catalog-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+    text-align: left;
+  }
+
+  .catalog-section .catalog-heading h2 {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    line-height: 1.02;
+  }
+
+  .catalog-section .catalog-heading-note {
+    max-width: none;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    border-top: 0;
+    border-left-width: 2px;
+    padding: 11px 12px;
+    font-size: 0.69rem;
+    text-align: left;
+  }
+
+  .catalog-heading-note-icon {
+    width: 31px;
+    height: 31px;
+    border-radius: 9px;
   }
 
   .selected-category-heading .product-back-link {
     grid-column: auto;
-    margin: 0 auto 4px;
+    margin: 0 0 10px;
   }
 
   .selected-category-heading h3 {
-    font-size: 1.6rem;
+    font-size: clamp(1.4rem, 6.5vw, 1.65rem);
   }
 
   .selected-category-heading > div > p:last-child {
     font-size: 0.7rem;
   }
 
-  .category-product-count {
-    justify-self: center;
-    font-size: 0.63rem;
+  .selected-category-meta {
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 12px;
   }
 
-  .product-grid {
+  .category-product-count {
+    padding: 7px 9px;
+    font-size: 0.6rem;
+  }
+
+  .product-carousel-controls {
+    gap: 6px;
+  }
+
+  .product-carousel-arrow {
+    width: 35px;
+    height: 35px;
+    border-radius: 11px;
+  }
+
+  .product-carousel-stage {
+    border-radius: 19px;
+    padding: 4px;
+  }
+
+  .product-carousel {
     gap: 13px;
+    padding: 7px 6px 10px;
   }
 
   .product-card {
+    flex-basis: min(86%, 380px);
     grid-template-columns: 1fr;
-    border-radius: 14px;
+    grid-template-rows: 190px minmax(144px, auto);
+    border-radius: 16px;
   }
 
   .product-card-image {
-    min-height: 215px;
-    max-height: 250px;
+    min-height: 0;
   }
 
   .product-card-image img {
-    padding: 18px;
+    padding: 16px 20px;
   }
 
   .product-card-copy {
-    min-height: 169px;
-    padding: 15px;
+    min-height: 0;
+    padding: 15px 14px;
   }
 
   .product-card-copy h4 {
-    font-size: 0.98rem;
+    font-size: 0.88rem;
   }
 
   .product-card-copy p {
-    margin-block: 7px 11px;
-    font-size: 0.65rem;
+    margin-block: 6px 9px;
+    font-size: 0.63rem;
   }
 
   .product-detail {
