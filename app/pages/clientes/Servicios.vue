@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import evaluationImage from '~/assets/RecOpt.jpg'
-import classicFramesImage from '~/assets/ClassicFrames.png'
-import modernFramesImage from '~/assets/Sunglasses.png'
-import safetyGlassesImage from '~/assets/Fondo.png'
-import safetyStoreImage from '~/assets/Seguridad.jpeg'
-import lifestyleFramesImage from '~/assets/FondoPrincipal.jpg'
+import evaluationImage from '~/assets/RecOpt.webp'
+import classicFramesImage from '~/assets/ClassicFrames.webp'
+import modernFramesImage from '~/assets/Sunglasses.webp'
+import safetyGlassesImage from '~/assets/Fondo.webp'
+import safetyStoreImage from '~/assets/Seguridad.webp'
+import lifestyleFramesImage from '~/assets/FondoPrincipal.webp'
 
 useHead({
   title: 'Lentes y servicios | Clínica Óptica',
@@ -660,6 +660,7 @@ const steps = [
             <img
               :src="selectedProduct.images[selectedPhotoIndex]?.src"
               :alt="selectedProduct.images[selectedPhotoIndex]?.alt"
+              decoding="async"
             >
             <span class="product-reference-label">
               <UIcon
@@ -686,6 +687,8 @@ const steps = [
               <img
                 :src="photo.src"
                 :alt="photo.alt"
+                loading="lazy"
+                decoding="async"
               >
               <span>{{ index === 0 ? 'Principal' : `Foto ${index + 1}` }}</span>
             </button>
@@ -833,6 +836,7 @@ const steps = [
                   :src="product.images[0]?.src"
                   :alt="product.images[0]?.alt"
                   loading="lazy"
+                  decoding="async"
                 >
                 <span class="product-sample-badge">
                   <UIcon
@@ -892,6 +896,7 @@ const steps = [
                 :src="category.image"
                 :alt="category.imageAlt"
                 loading="lazy"
+                decoding="async"
               >
               <span class="category-image-shade" />
               <span class="category-photo-label">

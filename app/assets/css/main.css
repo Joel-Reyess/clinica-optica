@@ -5,6 +5,15 @@ html {
   scroll-behavior: smooth;
 }
 
+main > section.scroll-reveal {
+  opacity: 0;
+  transition: opacity 320ms ease-out;
+}
+
+main > section.scroll-reveal.is-revealed {
+  opacity: 1;
+}
+
 body {
   min-width: 0;
   margin: 0;
@@ -17,6 +26,17 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  main > section.scroll-reveal {
+    opacity: 1;
+    transition: none;
+  }
 }
 
 @theme static {
@@ -193,5 +213,54 @@ body {
   .site-footer .footer-copyright {
     margin: 2px 0 0;
     text-align: center;
+  }
+}
+
+.brand-lockup {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  color: #102b4a;
+  white-space: nowrap;
+}
+
+.brand-eye {
+  width: 72px;
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.brand-type {
+  display: grid;
+  gap: 2px;
+}
+
+.brand-type strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.83rem, 1.35vw, 1.06rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.brand-type small {
+  font-size: 0.43rem;
+  font-weight: 700;
+  letter-spacing: 0.105em;
+  line-height: 1.2;
+}
+
+@media (max-width: 440px) {
+  .brand-eye {
+    width: 62px;
+  }
+
+  .brand-type strong {
+    font-size: 0.82rem;
+  }
+
+  .brand-type small {
+    font-size: 0.39rem;
   }
 }

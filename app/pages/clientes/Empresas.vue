@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import campaignImage from '~/assets/RecOpt.jpg'
-import graduatedFramesImage from '~/assets/FondoPrincipal.jpg'
-import safetyGlasses from '~/assets/Seguridad.jpeg'
-import workplaceImage from '~/assets/PropEmp.jpg'
+import campaignImage from '~/assets/RecOpt.webp'
+import graduatedFramesImage from '~/assets/FondoPrincipal.webp'
+import safetyGlasses from '~/assets/Seguridad.webp'
+import workplaceImage from '~/assets/PropEmp.webp'
 
 useHead({
   title: 'Empresas | Clínica Óptica',
@@ -283,6 +283,9 @@ const benefits = [
           <img
             :src="workplaceImage"
             alt="Edificio corporativo que representa la atención a organizaciones"
+            width="1000"
+            height="667"
+            fetchpriority="high"
           >
           <div class="photo-shade" />
           <span class="photo-label">
@@ -351,6 +354,7 @@ const benefits = [
               :src="solution.image"
               :alt="solution.imageAlt"
               loading="lazy"
+              decoding="async"
             >
             <span class="solution-number">{{ solution.number }}</span>
             <span class="image-wash" />

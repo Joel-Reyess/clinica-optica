@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import {
   getPrescriptionDraft,
   setPrescriptionDraft,
   setQuoteRequestDraft
 } from '~/utils/prescriptionDraft'
-import heroImage from '~/assets/FondoPrincipal.jpg'
-import classicFrames from '~/assets/ClassicFrames.png'
-import modernFrames from '~/assets/Sunglasses.png'
-import safetyFrames from '~/assets/Seguridad.jpeg'
+
+const heroVideoSource = '/hero-eyewear-ping-pong.mp4'
+
+useHead({
+  title: 'Clínica Óptica | Salud visual y lentes en Coatzacoalcos',
+  meta: [
+    {
+      name: 'description',
+      content: 'Atención visual profesional, evaluaciones optométricas y lentes a tu medida en Coatzacoalcos. Agenda tu cita en Clínica Óptica.'
+    }
+  ]
+})
 
 const helpCards = [
   {
@@ -42,6 +50,7 @@ const helpCards = [
 ]
 
 const prescriptionError = ref('')
+const isHeroVideoEnabled = ref(false)
 const prescriptionName = ref(getPrescriptionDraft()?.name ?? '')
 const prescriptionInput = ref<HTMLInputElement | null>(null)
 const recipeDialog = ref<HTMLDialogElement | null>(null)
@@ -60,6 +69,8 @@ const patientRequest = ref({
   aboutOrder: false,
   orderFolio: ''
 })
+let heroVideoTimer: number | undefined
+let heroVideoMediaQuery: MediaQueryList | undefined
 const router = useRouter()
 const recipeReasons = [
   'Cotizar lentes graduados',
@@ -169,10 +180,73 @@ function resetPatientRequestOrderState() {
   patientRequestUrl.value = ''
 }
 
+function reportHeroVideoError() {
+  isHeroVideoEnabled.value = false
+  console.error('No se pudo cargar el video del hero.')
+}
+
+function updateHeroVideo() {
+  if (heroVideoTimer !== undefined) {
+    window.clearTimeout(heroVideoTimer)
+    heroVideoTimer = undefined
+  }
+
+  isHeroVideoEnabled.value = false
+  if (!heroVideoMediaQuery?.matches) return
+
+  heroVideoTimer = window.setTimeout(() => {
+    isHeroVideoEnabled.value = true
+    heroVideoTimer = undefined
+  }, 1500)
+}
+
+onMounted(() => {
+  heroVideoMediaQuery = window.matchMedia(
+    '(min-width: 761px) and (prefers-reduced-motion: no-preference)'
+  )
+  heroVideoMediaQuery.addEventListener('change', updateHeroVideo)
+  updateHeroVideo()
+})
+
+onBeforeUnmount(() => {
+  if (heroVideoTimer !== undefined) window.clearTimeout(heroVideoTimer)
+  heroVideoMediaQuery?.removeEventListener('change', updateHeroVideo)
+})
+
 const frameCards = [
-  { title: 'Clásicos', category: 'clasicos', image: classicFrames, alt: 'Armazón clásico para lentes graduados' },
-  { title: 'Modernos', category: 'modernos', image: modernFrames, alt: 'Armazón moderno para lentes graduados' },
-  { title: 'Seguridad graduada', category: 'seguridad-graduada', image: safetyFrames, alt: 'Lentes de seguridad graduados' }
+  {
+    title: 'Clásicos',
+    category: 'clasicos',
+    image: '/images/ClassicFrames-640.webp',
+    imageMedium: '/images/ClassicFrames-480.webp',
+    imageSmall: '/images/ClassicFrames-320.webp',
+    sizes: '(max-width: 520px) 40vw, (max-width: 760px) 228px, 269px',
+    width: 1600,
+    height: 631,
+    alt: 'Armazón clásico para lentes graduados'
+  },
+  {
+    title: 'Modernos',
+    category: 'modernos',
+    image: '/images/Sunglasses-640.webp',
+    imageMedium: '/images/Sunglasses-480.webp',
+    imageSmall: '/images/Sunglasses-320.webp',
+    sizes: '(max-width: 520px) 116px, (max-width: 760px) 121px, 143px',
+    width: 1600,
+    height: 1190,
+    alt: 'Armazón moderno para lentes graduados'
+  },
+  {
+    title: 'Seguridad graduada',
+    category: 'seguridad-graduada',
+    image: '/images/Seguridad-640.webp',
+    imageMedium: '/images/Seguridad-480.webp',
+    imageSmall: '/images/Seguridad-320.webp',
+    sizes: '(max-width: 520px) 94px, (max-width: 760px) 98px, 115px',
+    width: 1100,
+    height: 1008,
+    alt: 'Lentes de seguridad graduados'
+  }
 ]
 </script>
 
@@ -210,10 +284,29 @@ const frameCards = [
         </div>
       </div>
       <div class="hero-visual">
+        <video
+          v-if="isHeroVideoEnabled"
+          class="hero-media"
+          :src="heroVideoSource"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          aria-hidden="true"
+          @error="reportHeroVideoError"
+        />
         <img
-          :src="heroImage"
+          v-else
+          class="hero-media"
+          src="/images/FondoPrincipal-1024.webp"
+          srcset="/images/FondoPrincipal-480.webp 480w, /images/FondoPrincipal-768.webp 768w, /images/FondoPrincipal-1024.webp 1024w, /images/FondoPrincipal-1400.webp 1400w"
+          sizes="100vw"
           alt="Armazones de lentes en exhibición"
+          width="1400"
+          height="934"
           fetchpriority="high"
+          decoding="async"
         >
         <div class="hero-note">
           <span>Una mejor visión</span>
@@ -279,9 +372,14 @@ const frameCards = [
           <span class="frame-image">
             <img
               :src="frame.image"
+              :srcset="`${frame.imageSmall} 320w, ${frame.imageMedium} 480w, ${frame.image} 640w`"
+              :sizes="frame.sizes"
               :alt="frame.alt"
               :class="`frame-image-${index + 1}`"
+              :width="frame.width"
+              :height="frame.height"
               loading="lazy"
+              decoding="async"
             >
           </span>
           <h3>{{ frame.title }}</h3>
@@ -632,25 +730,32 @@ const frameCards = [
 
 .hero {
   display: grid;
-  grid-template-columns: 0.92fr 1.08fr;
-  min-height: 310px;
+  height: clamp(460px, 68vh, 680px);
+  position: relative;
   overflow: hidden;
   background: #f1f3f4;
 }
 
 .hero-copy {
-  z-index: 1;
+  position: relative;
+  z-index: 2;
   align-self: center;
-  max-width: 640px;
-  justify-self: end;
+  max-width: 760px;
+  justify-self: start;
   width: 100%;
-  padding: 35px clamp(24px, 4.6vw, 70px) 38px 32px;
+  padding: 48px clamp(28px, 6vw, 88px);
+  background: rgb(241 243 244 / 74%);
+}
+
+.eyebrow,
+.hero-description {
+  text-shadow: 0 1px 8px rgb(241 243 244 / 70%);
 }
 
 .eyebrow {
   margin: 0 0 13px;
   color: #43566c;
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -659,22 +764,29 @@ const frameCards = [
 .hero h1 {
   margin: 0;
   color: var(--navy-deep);
-  font-size: clamp(2.5rem, 5.1vw, 3.45rem);
+  font-size: clamp(3rem, 5.5vw, 4.25rem);
   font-weight: 800;
   letter-spacing: -0.055em;
   line-height: 1.02;
+  text-shadow: 0 1px 12px rgb(255 255 255 / 60%);
 }
 
 .hero-description {
-  margin: 12px 0 17px;
+  margin: 16px 0 22px;
   color: #354b63;
-  font-size: clamp(0.92rem, 1.4vw, 1.08rem);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.hero .button {
+  min-height: 48px;
+  padding: 11px 20px;
+  font-size: 0.92rem;
 }
 
 .button {
@@ -719,33 +831,30 @@ const frameCards = [
 }
 
 .hero-visual {
-  position: relative;
-  min-height: 310px;
+  position: absolute;
+  z-index: 0;
+  inset: 0;
   overflow: hidden;
   background: #e6ebed;
 }
 
-.hero-visual::before {
+.hero-media {
   position: absolute;
-  z-index: 1;
-  inset: 0 auto 0 0;
-  width: 18%;
-  background: linear-gradient(90deg, #f1f3f4, transparent);
-  content: '';
-  pointer-events: none;
-}
-
-.hero-visual img {
+  inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 310px;
   object-fit: cover;
-  object-position: 52% 53%;
+  object-position: center;
+}
+
+.hero-note,
+.hero-caption {
+  z-index: 1;
 }
 
 .hero-note {
   position: absolute;
-  top: 22px;
+  top: 48px;
   right: clamp(16px, 3vw, 40px);
   display: grid;
   gap: 5px;
@@ -767,8 +876,8 @@ const frameCards = [
 
 .hero-caption {
   position: absolute;
+  top: 0;
   right: 0;
-  bottom: 0;
   left: 0;
   margin: 0;
   padding: 9px 12px;
@@ -1334,29 +1443,52 @@ const frameCards = [
   height: 22px;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 761px) {
+  .hero-copy {
+    align-self: stretch;
+    max-width: 840px;
+    height: 100%;
+    padding: 56px clamp(40px, 6vw, 104px);
+    transform: none;
+    background: rgb(241 243 244 / 42%);
+    backdrop-filter: blur(8px);
+  }
+
   .hero {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    height: clamp(500px, 76vh, 760px);
+  }
+
+  .eyebrow {
+    font-size: 0.92rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.75rem, 6vw, 5rem);
+  }
+
+  .hero-description {
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+  }
+
+  .hero .button {
+    min-height: 56px;
+    padding: 14px 24px;
+    font-size: 1.05rem;
   }
 }
 
 @media (max-width: 760px) {
   .hero {
-    grid-template-columns: 1fr 1fr;
-    min-height: 285px;
+    height: clamp(440px, 64svh, 600px);
   }
 
   .hero-copy {
-    padding: 28px 16px 28px 24px;
+    max-width: 620px;
+    padding: 36px 28px;
   }
 
   .hero h1 {
-    font-size: clamp(2rem, 5vw, 2.7rem);
-  }
-
-  .hero-visual,
-  .hero-visual img {
-    min-height: 285px;
+    font-size: clamp(2.8rem, 7vw, 3.6rem);
   }
 
   .content-section {
@@ -1398,41 +1530,22 @@ const frameCards = [
 
 @media (max-width: 520px) {
   .hero {
-    position: relative;
-    display: block;
-    min-height: 325px;
+    height: clamp(440px, 70svh, 600px);
   }
 
   .hero-copy {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    padding: 32px 22px 28px;
-    background: linear-gradient(90deg, rgb(244 246 247 / 97%) 0%, rgb(244 246 247 / 91%) 58%, rgb(244 246 247 / 15%) 100%);
+    max-width: 100%;
+    padding: 34px 22px;
+    background: rgb(241 243 244 / 60%);
+    backdrop-filter: blur(5px);
   }
 
   .hero h1 {
-    font-size: clamp(2.45rem, 11vw, 3.2rem);
-  }
-
-  .hero-visual {
-    position: absolute;
-    inset: 0 0 0 18%;
-    min-height: 325px;
-  }
-
-  .hero-visual img {
-    min-height: 325px;
-    object-position: 55% center;
-  }
-
-  .hero-visual::before {
-    width: 50%;
-    background: linear-gradient(90deg, #f4f6f7, transparent);
+    font-size: clamp(2.7rem, 11vw, 3.5rem);
   }
 
   .hero-note {
-    top: 14px;
+    top: 48px;
     right: 12px;
     font-size: 0.58rem;
   }

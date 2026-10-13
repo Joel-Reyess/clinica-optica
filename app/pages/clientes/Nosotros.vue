@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import teamPhoto from '~/assets/RecOpt.jpg'
+import teamPhoto from '~/assets/RecOpt.webp'
 
 useHead({
   title: 'Nosotros | Clínica Óptica',
@@ -71,6 +71,8 @@ const teamMembers = [
         <img
           :src="teamPhoto"
           alt="Armazón óptico y carta de letras para revisión visual"
+          width="1000"
+          height="667"
           fetchpriority="high"
         >
         <p>
@@ -155,6 +157,7 @@ const teamMembers = [
           :src="teamPhoto"
           alt="Lentes preparados para una evaluación de la vista"
           loading="lazy"
+          decoding="async"
         >
       </div>
       <div class="team-copy">
