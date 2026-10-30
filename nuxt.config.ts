@@ -22,6 +22,13 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  runtimeConfig: {
+    public: {
+      apiBase: 'http://localhost:8000/api',
+      whatsappNumber: '529211371704'
+    }
+  },
+
   routeRules: {
     '/': { prerender: true },
     '/images/**': {
