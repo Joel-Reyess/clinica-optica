@@ -3,6 +3,8 @@ const route = useRoute()
 
 const enlaces = [
   { to: '/admin', label: 'Solicitudes', icon: 'i-lucide-inbox' },
+  { to: '/admin?tipo=cita', label: 'Citas', icon: 'i-lucide-calendar-days' },
+  { to: '/admin/convenios', label: 'Convenios', icon: 'i-lucide-handshake' },
   { to: '/admin/catalogo', label: 'Catálogo', icon: 'i-lucide-glasses' },
   { to: '/admin/textos', label: 'Textos y horarios', icon: 'i-lucide-type' }
 ]
@@ -22,7 +24,7 @@ async function salir() {
           v-for="e in enlaces"
           :key="e.to"
           :to="e.to"
-          :class="{ activo: route.path === e.to }"
+          :class="{ activo: route.fullPath === e.to }"
         >
           <UIcon
             :name="e.icon"

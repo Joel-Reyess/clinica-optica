@@ -61,6 +61,9 @@ const emptyAppointment = () => ({
   trap: ''
 })
 const appointment = reactive(emptyAppointment())
+// Si la persona viene de "Convenios", se conserva la empresa elegida
+const route = useRoute()
+const convenio = ref(typeof route.query.convenio === 'string' ? route.query.convenio.slice(0, 120) : '')
 const confirmationRef = ref('')
 const confirmationUrl = ref('')
 
@@ -212,6 +215,7 @@ async function sendAppointment() {
     tipoPaciente: appointment.patientStatus as CitaInput['tipoPaciente'],
     fecha: selectedDate.value,
     hora: appointment.time,
+    convenio: convenio.value,
     esMenor: appointment.isMinor,
     responsableNombre: appointment.responsibleName,
     responsableTelefono: appointment.responsiblePhone,
@@ -312,6 +316,22 @@ function editAppointment() {
           novalidate
           @submit.prevent="sendAppointment"
         >
+          <p
+            v-if="convenio"
+            class="appointment-convenio"
+          >
+            <UIcon
+              name="i-lucide-handshake"
+              aria-hidden="true"
+            />
+            <span>
+              Convenio: <strong>{{ convenio }}</strong>. Confirmaremos tu horario y verificaremos que puedas utilizar el convenio; no se aplica ningún descuento de forma automática.
+              <button
+                type="button"
+                @click="convenio = ''"
+              >Quitar</button>
+            </span>
+          </p>
           <div class="appointment-form-heading">
             <span class="appointment-heading-icon">
               <UIcon

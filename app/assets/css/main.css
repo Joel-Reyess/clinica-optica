@@ -216,52 +216,16 @@ body {
   }
 }
 
-.brand-lockup {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  gap: 8px;
-  color: #102b4a;
-  white-space: nowrap;
-}
-
-.brand-eye {
-  width: 72px;
-  height: auto;
-  flex: 0 0 auto;
-}
-
-.brand-type {
-  display: grid;
-  gap: 2px;
-}
-
-.brand-type strong {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(0.83rem, 1.35vw, 1.06rem);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1;
-}
-
-.brand-type small {
-  font-size: 0.43rem;
-  font-weight: 700;
-  letter-spacing: 0.105em;
-  line-height: 1.2;
+.brand-logo {
+  display: block;
+  width: auto;
+  height: 56px;
+  border-radius: 6px;
 }
 
 @media (max-width: 440px) {
-  .brand-eye {
-    width: 62px;
-  }
-
-  .brand-type strong {
-    font-size: 0.82rem;
-  }
-
-  .brand-type small {
-    font-size: 0.39rem;
+  .brand-logo {
+    height: 48px;
   }
 }
 
@@ -306,6 +270,87 @@ body {
 .request-link-button {
   display: block;
   margin-top: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Filtros del catálogo (categoría y marca) */
+.catalog-filters {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border: 1px solid #dfe6ee;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-label {
+  min-width: 78px;
+  color: #5b6b80;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1px solid #c9d4e0;
+  border-radius: 999px;
+  color: #102b4a;
+  font-size: 0.92rem;
+  text-decoration: none;
+}
+
+.filter-chip small {
+  color: #66758a;
+}
+
+.filter-chip:hover {
+  background: #eef3f9;
+}
+
+.filter-chip.active {
+  border-color: #102b4a;
+  background: #102b4a;
+  color: #fff;
+}
+
+.filter-chip.active small {
+  color: #cfe0f3;
+}
+
+.appointment-convenio {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 1px solid #d9c38a;
+  border-radius: 12px;
+  background: #fbf5e3;
+  color: #102b4a;
+  font-size: 0.92rem;
+}
+
+.appointment-convenio button {
   padding: 0;
   border: 0;
   background: none;

@@ -346,6 +346,7 @@ const selectedCategory = computed(() => {
 const { data: catalogo } = await useFetch<Array<{
   id: number
   categoria: string
+  marca: string | null
   nombre: string
   codigo: string | null
   descripcion: string | null
@@ -359,15 +360,57 @@ const products = computed(() => catalogo.value?.length
   ? catalogo.value.map(p => ({
       id: `p${p.id}`,
       category: p.categoria,
+      brand: p.marca || '',
       name: p.nombre,
       subtitle: p.codigo || 'Modelo disponible',
       description: p.descripcion || 'Consulta en clínica los colores y la compatibilidad con tu receta.',
       material: p.promocion || (p.precioDesde ? `Desde ${p.precioDesde}` : 'Consulta en clínica'),
       images: p.imagenes.length ? p.imagenes : [{ src: lifestyleFramesImage, alt: p.nombre }]
     }))
-  : productosMuestra)
+  : productosMuestra.map(m => ({ ...m, brand: '' })))
 
-const categoryProducts = computed(() => products.value.filter(product => product.category === selectedCategory.value?.slug))
+const isSample = computed(() => !catalogo.value?.length)
+
+const selectedBrand = computed(() => {
+  const marca = route.query.marca
+  return typeof marca === 'string' && marca ? marca : ''
+})
+
+// Marcas que existen en el catálogo, con cuántos modelos tiene cada una
+const brands = computed(() => {
+  const conteo = new Map<string, number>()
+  for (const p of products.value) {
+    if (p.brand) conteo.set(p.brand, (conteo.get(p.brand) ?? 0) + 1)
+  }
+  return [...conteo.entries()].sort((a, b) => a[0].localeCompare(b[0], 'es')).map(([name, count]) => ({ name, count }))
+})
+
+const categoryLabel = (slug: string) => categories.find(c => c.slug === slug)?.category ?? ''
+
+// Filtros: se combinan categoría y marca; cada chip conserva lo que ya estaba elegido
+function filterLink(categoria?: string, marca?: string) {
+  const query: Record<string, string> = {}
+  if (categoria) query.categoria = categoria
+  if (marca) query.marca = marca
+  return { path: '/lentes', query, hash: '#catalogo' }
+}
+
+const categoryProducts = computed(() => products.value.filter(product =>
+  (!selectedCategory.value || product.category === selectedCategory.value.slug)
+  && (!selectedBrand.value || product.brand === selectedBrand.value)
+))
+
+const listHeading = computed(() => {
+  if (selectedCategory.value && !selectedBrand.value) return selectedCategory.value
+  return {
+    slug: selectedCategory.value?.slug ?? '',
+    category: selectedCategory.value?.category ?? 'Todas las categorías',
+    title: selectedBrand.value ? `Marca ${selectedBrand.value}` : 'Todos los modelos',
+    description: selectedCategory.value
+      ? `${selectedCategory.value.title}, filtrados por marca.`
+      : 'Todos los modelos disponibles de esta marca.'
+  }
+})
 
 const productCarousel = ref<HTMLElement | null>(null)
 const canScrollProductsBackward = ref(false)
@@ -442,7 +485,7 @@ onBeforeUnmount(() => {
 })
 
 watch(
-  () => [route.query.categoria, route.query.producto],
+  () => [route.query.categoria, route.query.marca, route.query.producto],
   async () => {
     await nextTick()
 
@@ -661,7 +704,7 @@ const steps = [
             Encuentra un estilo para ti
           </p>
           <h2 id="catalog-title">
-            Explora el catálogo por categoría.
+            Explora el catálogo por categoría o marca.
           </h2>
         </div>
         <p class="catalog-heading-note">
@@ -673,6 +716,54 @@ const steps = [
           </span>
           <span>Descubre algunas opciones y pide asesoría para conocer modelos, disponibilidad y detalles.</span>
         </p>
+      </div>
+
+      <div
+        class="catalog-filters"
+        role="group"
+        aria-label="Filtros del catálogo"
+      >
+        <div class="filter-row">
+          <span class="filter-label">Categoría</span>
+          <NuxtLink
+            class="filter-chip"
+            :class="{ active: !selectedCategory }"
+            :to="filterLink(undefined, selectedBrand)"
+          >
+            Todas
+          </NuxtLink>
+          <NuxtLink
+            v-for="c in categories"
+            :key="c.slug"
+            class="filter-chip"
+            :class="{ active: selectedCategory?.slug === c.slug }"
+            :to="filterLink(c.slug, selectedBrand)"
+          >
+            {{ c.category }}
+          </NuxtLink>
+        </div>
+        <div
+          v-if="brands.length"
+          class="filter-row"
+        >
+          <span class="filter-label">Marca</span>
+          <NuxtLink
+            class="filter-chip"
+            :class="{ active: !selectedBrand }"
+            :to="filterLink(selectedCategory?.slug)"
+          >
+            Todas
+          </NuxtLink>
+          <NuxtLink
+            v-for="b in brands"
+            :key="b.name"
+            class="filter-chip"
+            :class="{ active: selectedBrand === b.name }"
+            :to="filterLink(selectedCategory?.slug, b.name)"
+          >
+            {{ b.name }} <small>{{ b.count }}</small>
+          </NuxtLink>
+        </div>
       </div>
 
       <div
@@ -731,7 +822,7 @@ const steps = [
             Volver a {{ selectedCategory.category }}
           </NuxtLink>
           <p class="section-eyebrow">
-            {{ selectedCategory.category }} · {{ selectedProduct.subtitle }}
+            {{ selectedProduct.brand ? `${selectedProduct.brand} · ` : '' }}{{ selectedCategory.category }} · {{ selectedProduct.subtitle }}
           </p>
           <h3>{{ selectedProduct.name }}</h3>
           <p class="product-description">
@@ -779,7 +870,7 @@ const steps = [
         </div>
       </div>
 
-      <template v-else-if="selectedCategory">
+      <template v-else-if="selectedCategory || selectedBrand">
         <div class="selected-category-heading">
           <NuxtLink
             class="product-back-link"
@@ -793,10 +884,10 @@ const steps = [
           </NuxtLink>
           <div>
             <p class="section-eyebrow">
-              Categoría seleccionada
+              {{ selectedBrand ? 'Filtrando por marca' : 'Categoría seleccionada' }}
             </p>
-            <h3>{{ selectedCategory.title }}</h3>
-            <p>{{ selectedCategory.description }}</p>
+            <h3>{{ listHeading.title }}</h3>
+            <p>{{ listHeading.description }}</p>
           </div>
           <div class="selected-category-meta">
             <span class="category-product-count">
@@ -804,7 +895,7 @@ const steps = [
                 name="i-lucide-glasses"
                 aria-hidden="true"
               />
-              {{ categoryProducts.length }} modelos de muestra
+              {{ categoryProducts.length }} {{ isSample ? 'modelos de muestra' : 'modelos' }}
             </span>
             <div
               class="product-carousel-controls"
@@ -845,7 +936,7 @@ const steps = [
             class="product-carousel"
             role="region"
             aria-roledescription="carrusel"
-            :aria-label="`Modelos de ${selectedCategory.category}`"
+            :aria-label="`Modelos de ${listHeading.category}`"
             tabindex="0"
             @scroll.passive="updateProductCarouselState"
           >
@@ -853,7 +944,7 @@ const steps = [
               v-for="(product, index) in categoryProducts"
               :key="product.id"
               class="product-card"
-              :to="{ path: '/lentes', query: { categoria: selectedCategory.slug, producto: product.id }, hash: '#producto' }"
+              :to="{ path: '/lentes', query: { categoria: product.category, producto: product.id }, hash: '#producto' }"
               :aria-label="`Ver detalles de ${product.name}, modelo ${index + 1} de ${categoryProducts.length}`"
             >
               <div class="product-card-image">
@@ -863,7 +954,10 @@ const steps = [
                   loading="lazy"
                   decoding="async"
                 >
-                <span class="product-sample-badge">
+                <span
+                  v-if="isSample"
+                  class="product-sample-badge"
+                >
                   <UIcon
                     name="i-lucide-sparkles"
                     aria-hidden="true"
@@ -879,7 +973,7 @@ const steps = [
               </div>
               <div class="product-card-copy">
                 <div class="product-card-heading">
-                  <span class="product-card-eyebrow">{{ selectedCategory.category }}</span>
+                  <span class="product-card-eyebrow">{{ product.brand ? `${product.brand} · ` : '' }}{{ categoryLabel(product.category) }}</span>
                   <span class="product-card-subtitle">{{ product.subtitle }}</span>
                 </div>
                 <h4>{{ product.name }}</h4>

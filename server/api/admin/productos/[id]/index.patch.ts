@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const id = Number(getRouterParam(event, 'id'))
   const p = await leerValidado(event, productoSchema)
   const res = useDb().prepare(`
-    UPDATE productos SET categoria = @categoria, nombre = @nombre, codigo = @codigo,
+    UPDATE productos SET categoria = @categoria, marca = @marca, nombre = @nombre, codigo = @codigo,
       descripcion = @descripcion, colores = @colores, precio_desde = @precio,
       promocion = @promocion, visible = @visible, orden = @orden,
       actualizado_en = datetime('now')
@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
   `).run({
     id,
     categoria: p.categoria,
+    marca: p.marca || null,
     nombre: p.nombre,
     codigo: p.codigo || null,
     descripcion: p.descripcion || null,

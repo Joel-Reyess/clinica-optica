@@ -108,6 +108,21 @@ const MIGRACIONES: string[] = [
     creado_en TEXT NOT NULL DEFAULT (datetime('now'))
   );
   CREATE INDEX idx_eventos ON eventos (evento, creado_en);
+  `,
+  // 5: marca de los lentes
+  `
+  ALTER TABLE productos ADD COLUMN marca TEXT;
+  `,
+  // 6: empresas con convenio (solo nombre y logo; las condiciones se dan en privado)
+  `
+  CREATE TABLE convenios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    logo TEXT,
+    vigente INTEGER NOT NULL DEFAULT 1,
+    orden INTEGER NOT NULL DEFAULT 0,
+    creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
   `
 ]
 

@@ -1,6 +1,7 @@
 interface FilaProducto {
   id: number
   categoria: string
+  marca: string | null
   nombre: string
   codigo: string | null
   descripcion: string | null
@@ -36,6 +37,7 @@ export function listarProductos(soloVisibles: boolean, categoria?: string) {
   return productos.map(p => ({
     id: p.id,
     categoria: p.categoria,
+    marca: p.marca,
     nombre: p.nombre,
     codigo: p.codigo,
     descripcion: p.descripcion,

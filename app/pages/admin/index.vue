@@ -16,6 +16,7 @@ interface Fila {
   responsable: string | null
   creada_en: string
   tiene_receta: number
+  datos: Record<string, unknown>
 }
 
 interface Detalle extends Fila {
@@ -30,7 +31,9 @@ const TIPOS: Record<string, string> = { cita: 'Cita', cotizacion: 'Cotización',
 const ESTADOS: Record<string, string> = { nueva: 'Nueva', contactada: 'Contactada', en_seguimiento: 'En seguimiento', cerrada: 'Cerrada' }
 
 const api = useAdminApi()
-const filtros = reactive({ tipo: '', estado: '', q: '', pagina: 1 })
+const route = useRoute()
+const filtros = reactive({ tipo: typeof route.query.tipo === 'string' ? route.query.tipo : '', estado: '', q: '', pagina: 1 })
+const nuevas = ref<Record<string, number>>({})
 const cargando = ref(false)
 const errorLista = ref('')
 const lista = ref<{ total: number, porPagina: number, filas: Fila[] }>({ total: 0, porPagina: 25, filas: [] })
@@ -92,12 +95,42 @@ async function guardar() {
     await api(`/solicitudes/${detalle.value.id}`, { method: 'PATCH', body: { ...edicion } })
     mensaje.value = 'Guardado'
     await cargar()
+    cargarNuevas()
   } catch {
     mensaje.value = 'No se pudo guardar. Intenta de nuevo.'
   } finally {
     guardando.value = false
   }
 }
+
+// Día y hora que pidió la persona (solo citas)
+const diaCita = (f: Fila) => {
+  if (f.tipo !== 'cita') return ''
+  const dia = String(f.datos.fecha ?? '')
+  const hora = String(f.datos.hora ?? '')
+  if (!dia) return ''
+  const texto = new Date(`${dia}T12:00:00Z`).toLocaleDateString('es-MX', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' })
+  return `${texto} · ${hora}`
+}
+
+async function cargarNuevas() {
+  const r = await api<{ nuevasPorTipo: Array<{ tipo: string, n: number }> }>('/resumen').catch(() => null)
+  nuevas.value = Object.fromEntries((r?.nuevasPorTipo ?? []).map(x => [x.tipo, x.n]))
+}
+
+function elegirTipo(t: string) {
+  filtros.tipo = t
+  navigateTo({ path: '/admin', query: t ? { tipo: t } : {} })
+  filtrar()
+}
+
+watch(() => route.query.tipo, (t) => {
+  const nuevo = typeof t === 'string' ? t : ''
+  if (nuevo !== filtros.tipo) {
+    filtros.tipo = nuevo
+    filtrar()
+  }
+})
 
 const fecha = (v: string) => new Date(`${v.replace(' ', 'T')}Z`).toLocaleString('es-MX', {
   timeZone: 'America/Mexico_City',
@@ -107,6 +140,7 @@ const fecha = (v: string) => new Date(`${v.replace(' ', 'T')}Z`).toLocaleString(
 
 onMounted(async () => {
   cargar()
+  cargarNuevas()
   metricas.value = await api<Array<{ evento: string, n: number }>>('/metricas').catch(() => [])
 })
 </script>
@@ -131,26 +165,32 @@ onMounted(async () => {
       </li>
     </ul>
 
+    <div
+      class="pestanas"
+      role="tablist"
+      aria-label="Tipo de solicitud"
+    >
+      <button
+        v-for="t in [['', 'Todas'], ['cita', 'Citas'], ['cotizacion', 'Cotizaciones'], ['empresa', 'Empresas'], ['informacion', 'Información']]"
+        :key="t[0]"
+        type="button"
+        role="tab"
+        :aria-selected="filtros.tipo === t[0]"
+        :class="{ activa: filtros.tipo === t[0] }"
+        @click="elegirTipo(t[0]!)"
+      >
+        {{ t[1] }}
+        <span
+          v-if="t[0] && nuevas[t[0]!]"
+          class="badge"
+        >{{ nuevas[t[0]!] }} nuevas</span>
+      </button>
+    </div>
+
     <form
       class="filtros"
       @submit.prevent="filtrar"
     >
-      <select
-        v-model="filtros.tipo"
-        aria-label="Tipo"
-        @change="filtrar"
-      >
-        <option value="">
-          Todos los tipos
-        </option>
-        <option
-          v-for="(l, k) in TIPOS"
-          :key="k"
-          :value="k"
-        >
-          {{ l }}
-        </option>
-      </select>
       <select
         v-model="filtros.estado"
         aria-label="Estado"
@@ -193,6 +233,9 @@ onMounted(async () => {
             <tr>
               <th>Fecha</th>
               <th>Tipo</th>
+              <th v-if="filtros.tipo === 'cita'">
+                Día y hora pedidos
+              </th>
               <th>Nombre</th>
               <th>Teléfono</th>
               <th>Estado</th>
@@ -210,6 +253,9 @@ onMounted(async () => {
             >
               <td>{{ fecha(f.creada_en) }}</td>
               <td>{{ TIPOS[f.tipo] }}<span v-if="f.tiene_receta"> 📎</span></td>
+              <td v-if="filtros.tipo === 'cita'">
+                {{ diaCita(f) }}
+              </td>
               <td>{{ f.nombre }}</td>
               <td>{{ f.telefono }}</td>
               <td>
@@ -219,7 +265,7 @@ onMounted(async () => {
             </tr>
             <tr v-if="!lista.filas.length && !cargando">
               <td
-                colspan="6"
+                colspan="7"
                 class="vacio"
               >
                 No hay solicitudes con estos filtros.
@@ -326,6 +372,37 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.pestanas button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #102b4a;
+  border: 1px solid #c4cfdc;
+}
+
+.pestanas button.activa {
+  background: #102b4a;
+  color: #fff;
+  border-color: #102b4a;
+}
+
+.badge {
+  padding: 1px 8px;
+  border-radius: 99px;
+  background: #f59e0b;
+  color: #102b4a;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .metricas {
   display: flex;
   flex-wrap: wrap;

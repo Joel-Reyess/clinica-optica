@@ -5,7 +5,7 @@ import { join } from 'node:path'
 export const MAX_IMAGEN = 5 * 1024 * 1024 // 5 MB
 
 // Guarda una imagen del catálogo (solo JPG, PNG o WEBP, verificado por contenido).
-export function guardarImagenCatalogo(datos: Buffer): string {
+export function guardarImagenCatalogo(datos: Buffer, carpeta = 'catalogo'): string {
   const tipo = detectarTipo(datos)
   if (!tipo || tipo.mime === 'application/pdf') {
     throw createError({ statusCode: 422, statusMessage: 'Unprocessable Entity', message: 'La imagen debe ser JPG, PNG o WEBP.' })
@@ -14,13 +14,13 @@ export function guardarImagenCatalogo(datos: Buffer): string {
     throw createError({ statusCode: 422, statusMessage: 'Unprocessable Entity', message: 'La imagen no debe superar los 5 MB.' })
   }
   const nombre = `${randomBytes(16).toString('hex')}.${tipo.ext}`
-  writeFileSync(join(carpetaPrivada('catalogo'), nombre), datos, { mode: 0o640 })
+  writeFileSync(join(carpetaPrivada(carpeta), nombre), datos, { mode: 0o640 })
   return nombre
 }
 
-export function borrarImagenCatalogo(nombre: string) {
+export function borrarImagenCatalogo(nombre: string, carpeta = 'catalogo') {
   try {
-    unlinkSync(join(carpetaPrivada('catalogo'), nombre))
+    unlinkSync(join(carpetaPrivada(carpeta), nombre))
   } catch {
     // si ya no estaba, no pasa nada
   }

@@ -10,11 +10,12 @@ const links = [
   { label: 'Inicio', to: '/', icon: 'i-lucide-house' },
   { label: 'Nosotros', to: '/nosotros', icon: 'i-lucide-users-round' },
   { label: 'Lentes', to: '/lentes', icon: 'i-lucide-glasses' },
+  { label: 'Convenios', to: '/#convenios', icon: 'i-lucide-handshake' },
   { label: 'Empresas', to: '/empresas', icon: 'i-lucide-building-2' },
   { label: 'Contacto', to: '/contacto', icon: 'i-lucide-map-pinned' }
 ]
 
-watch(() => route.path, () => {
+watch(() => [route.path, route.hash], () => {
   menuOpen.value = false
 })
 </script>

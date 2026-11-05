@@ -4,10 +4,11 @@ import { productoSchema } from '#shared/schemas/producto'
 export default defineEventHandler(async (event) => {
   const p = await leerValidado(event, productoSchema)
   const res = useDb().prepare(`
-    INSERT INTO productos (categoria, nombre, codigo, descripcion, colores, precio_desde, promocion, visible, orden)
-    VALUES (@categoria, @nombre, @codigo, @descripcion, @colores, @precio, @promocion, @visible, @orden)
+    INSERT INTO productos (categoria, marca, nombre, codigo, descripcion, colores, precio_desde, promocion, visible, orden)
+    VALUES (@categoria, @marca, @nombre, @codigo, @descripcion, @colores, @precio, @promocion, @visible, @orden)
   `).run({
     categoria: p.categoria,
+    marca: p.marca || null,
     nombre: p.nombre,
     codigo: p.codigo || null,
     descripcion: p.descripcion || null,

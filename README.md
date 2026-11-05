@@ -67,7 +67,7 @@ Detrás de Traefik/Nginx se usa `X-Forwarded-For` para la IP real (límites y bl
 - Horarios de atención (se editan en el panel → "Textos y horarios").
 - Aviso de privacidad legal definitivo (`app/pages/privacidad.vue`).
 - Dominio definitivo (`NUXT_PUBLIC_SITE_URL`) y cuentas/servidor a nombre de la clínica.
-- Convenios reales y catálogo real con fotos (panel → "Catálogo"). Mientras no haya productos se muestran modelos de muestra.
+- Nombres y logotipos de las empresas con convenio que se pueden publicar (panel → "Convenios"), y catálogo real con marcas y fotos (panel → "Catálogo"). Mientras no haya productos se muestran modelos de muestra.
 - Si quieren analítica externa o Search Console: IDs de verificación.
 
 ## Fase 2 (no incluida)

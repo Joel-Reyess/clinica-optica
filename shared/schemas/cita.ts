@@ -24,6 +24,7 @@ export const citaSchema = z.object({
   tipoPaciente: z.enum(TIPOS_PACIENTE, 'Indica si eres paciente nuevo'),
   fecha: z.iso.date('Elige un día'),
   hora: z.string('Elige una hora').regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Elige una hora válida'),
+  convenio: z.string().trim().max(120).optional(),
   esMenor: z.boolean().optional(),
   responsableNombre: z.string().trim().max(120).optional(),
   responsableTelefono: z.string().optional(),

@@ -14,6 +14,7 @@ export default defineEventHandler(event => recibirSolicitud(event, {
       tipoPaciente: v.tipoPaciente,
       fecha: v.fecha,
       hora: v.hora,
+      convenio: v.convenio || undefined,
       esMenor: v.esMenor ? true : undefined,
       responsableNombre: v.esMenor ? v.responsableNombre : undefined,
       responsableTelefono: v.esMenor ? v.responsableTelefono?.replace(/\D/g, '') : undefined

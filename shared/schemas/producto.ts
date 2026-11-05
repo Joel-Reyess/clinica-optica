@@ -4,6 +4,7 @@ export const CATEGORIAS = ['clasicos', 'modernos', 'seguridad-graduada'] as cons
 
 export const productoSchema = z.object({
   categoria: z.enum(CATEGORIAS, 'Elige una categoría'),
+  marca: z.string().trim().max(60).optional(),
   nombre: z.string('Escribe el nombre').trim().min(2, 'Escribe el nombre').max(120),
   codigo: z.string().trim().max(60).optional(),
   descripcion: z.string().trim().max(1000).optional(),

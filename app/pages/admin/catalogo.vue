@@ -8,6 +8,7 @@ interface Imagen { id: number, src: string, alt: string }
 interface Producto {
   id: number
   categoria: string
+  marca: string | null
   nombre: string
   codigo: string | null
   descripcion: string | null
@@ -27,6 +28,7 @@ const editando = ref<number | null>(null) // null = ninguno, 0 = nuevo
 const mensaje = ref('')
 const form = reactive({
   categoria: 'clasicos',
+  marca: '',
   nombre: '',
   codigo: '',
   descripcion: '',
@@ -42,7 +44,7 @@ async function cargar() {
 }
 
 function nuevo() {
-  Object.assign(form, { categoria: 'clasicos', nombre: '', codigo: '', descripcion: '', colores: '', precioDesde: '', promocion: '', visible: true, orden: 0 })
+  Object.assign(form, { categoria: 'clasicos', marca: '', nombre: '', codigo: '', descripcion: '', colores: '', precioDesde: '', promocion: '', visible: true, orden: 0 })
   editando.value = 0
   mensaje.value = ''
 }
@@ -50,6 +52,7 @@ function nuevo() {
 function editar(p: Producto) {
   Object.assign(form, {
     categoria: p.categoria,
+    marca: p.marca ?? '',
     nombre: p.nombre,
     codigo: p.codigo ?? '',
     descripcion: p.descripcion ?? '',
@@ -113,6 +116,8 @@ async function quitarImagen(id: number) {
   await cargar()
 }
 
+const marcas = computed(() => [...new Set(productos.value.map(p => p.marca).filter((m): m is string => Boolean(m)))].sort())
+
 const actual = computed(() => productos.value.find(p => p.id === editando.value))
 
 onMounted(cargar)
@@ -146,7 +151,7 @@ onMounted(cargar)
             @click="editar(p)"
           >
             <strong>{{ p.nombre }}</strong>
-            <span>{{ ETIQUETAS[p.categoria] }}{{ p.visible ? '' : ' · oculto' }}</span>
+            <span>{{ p.marca ? `${p.marca} · ` : '' }}{{ ETIQUETAS[p.categoria] }}{{ p.visible ? '' : ' · oculto' }}</span>
           </button>
         </li>
         <li
@@ -171,6 +176,21 @@ onMounted(cargar)
               :value="c"
             >{{ ETIQUETAS[c] }}</option>
           </select>
+        </label>
+        <label>Marca
+          <input
+            v-model="form.marca"
+            list="marcas-existentes"
+            maxlength="60"
+            placeholder="Ej. Ray-Ban"
+          >
+          <datalist id="marcas-existentes">
+            <option
+              v-for="m in marcas"
+              :key="m"
+              :value="m"
+            />
+          </datalist>
         </label>
         <label>Nombre
           <input
