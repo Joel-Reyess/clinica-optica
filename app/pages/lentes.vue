@@ -80,7 +80,7 @@ const categories = [
   }
 ]
 
-const products = [
+const productosMuestra = [
   {
     id: 'clasico-havana',
     category: 'clasicos',
@@ -342,7 +342,32 @@ const selectedCategory = computed(() => {
     : undefined
 })
 
-const categoryProducts = computed(() => products.filter(product => product.category === selectedCategory.value?.slug))
+// Productos reales del panel; si todavía no hay ninguno, se muestran los de muestra.
+const { data: catalogo } = await useFetch<Array<{
+  id: number
+  categoria: string
+  nombre: string
+  codigo: string | null
+  descripcion: string | null
+  colores: string[]
+  precioDesde: string | null
+  promocion: string | null
+  imagenes: Array<{ src: string, alt: string }>
+}>>('/api/catalogo', { default: () => [] })
+
+const products = computed(() => catalogo.value?.length
+  ? catalogo.value.map(p => ({
+      id: `p${p.id}`,
+      category: p.categoria,
+      name: p.nombre,
+      subtitle: p.codigo || 'Modelo disponible',
+      description: p.descripcion || 'Consulta en clínica los colores y la compatibilidad con tu receta.',
+      material: p.promocion || (p.precioDesde ? `Desde ${p.precioDesde}` : 'Consulta en clínica'),
+      images: p.imagenes.length ? p.imagenes : [{ src: lifestyleFramesImage, alt: p.nombre }]
+    }))
+  : productosMuestra)
+
+const categoryProducts = computed(() => products.value.filter(product => product.category === selectedCategory.value?.slug))
 
 const productCarousel = ref<HTMLElement | null>(null)
 const canScrollProductsBackward = ref(false)
@@ -721,7 +746,7 @@ const steps = [
             </span>
             <span>
               <strong>{{ selectedProduct.material }}</strong>
-              <small>Modelo de muestra · Consulta opciones en clínica</small>
+              <small>{{ catalogo?.length ? 'Consulta opciones en clínica' : 'Modelo de muestra · Consulta opciones en clínica' }}</small>
             </span>
           </div>
           <p class="product-detail-note">
@@ -923,7 +948,10 @@ const steps = [
         </article>
       </div>
 
-      <p class="catalog-note">
+      <p
+        v-if="!catalogo?.length"
+        class="catalog-note"
+      >
         <UIcon
           name="i-lucide-info"
           aria-hidden="true"

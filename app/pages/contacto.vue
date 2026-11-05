@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 
+const { data: textos } = await useFetch<Record<string, string>>('/api/textos')
+
 useHead({
   title: 'Contacto | Clínica Óptica',
   meta: [
@@ -324,7 +326,9 @@ function sendMessage() {
             </span>
             <div>
               <h3>Horarios</h3>
-              <p>En actualización</p>
+              <p style="white-space: pre-line">
+                {{ textos?.horarios || 'En actualización' }}
+              </p>
               <span class="pending-note">Confirma disponibilidad por WhatsApp.</span>
             </div>
           </article>
