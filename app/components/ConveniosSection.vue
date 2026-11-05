@@ -59,7 +59,7 @@ function clicFondo(e: MouseEvent) {
       Convenios empresariales
     </h2>
     <p class="convenios-intro">
-      Si trabajas en una empresa con convenio, consulta cómo aprovecharlo. Los descuentos y condiciones los explicamos de forma personal, porque cambian según cada empresa.
+      Si trabajas en una empresa con convenio, consulta cómo aprovecharlo. Los descuentos y condiciones los explicamos de forma personal.
     </p>
 
     <template v-if="data.length">
