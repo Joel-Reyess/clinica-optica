@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import AppLogo from './AppLogo.vue'
 
+const { url: waUrl } = useWhatsapp()
+
 const route = useRoute()
 const menuOpen = ref(false)
 
@@ -56,7 +58,7 @@ watch(() => route.path, () => {
           v-for="link in links"
           :key="link.to"
           :to="link.to"
-          :class="{ 'nav-active': route.path === link.to || (link.to === '/lentes' && route.path === '/servicios') }"
+          :class="{ 'nav-active': route.path === link.to }"
         >
           <span class="nav-link-icon">
             <UIcon
@@ -74,7 +76,7 @@ watch(() => route.path, () => {
 
         <a
           class="header-whatsapp"
-          href="https://wa.me/529211371704"
+          :href="waUrl()"
           target="_blank"
           rel="noopener noreferrer"
         >

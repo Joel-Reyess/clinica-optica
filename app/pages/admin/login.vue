@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import AppLogo from '../../components/AppLogo.vue'
 
+definePageMeta({ layout: 'admin' })
+
 useHead({
   title: 'Acceso administrativo | Clínica Óptica',
   meta: [

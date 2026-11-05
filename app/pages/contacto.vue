@@ -11,7 +11,7 @@ useHead({
   ]
 })
 
-const whatsappNumber = '529211371704'
+const { numero: whatsappNumber } = useWhatsapp()
 const address = 'Benito Juárez 608, Centro, Coatzacoalcos, Veracruz'
 const mapUrl = 'https://www.google.com/maps/search/?api=1&query=Benito+Ju%C3%A1rez+608%2C+Centro%2C+Coatzacoalcos%2C+Veracruz'
 const mapEmbedUrl = 'https://maps.google.com/maps?q=Benito%20Ju%C3%A1rez%20608%2C%20Centro%2C%20Coatzacoalcos%2C%20Veracruz&output=embed'
@@ -301,7 +301,7 @@ function sendMessage() {
             </span>
             <div>
               <h3>Teléfono y WhatsApp</h3>
-              <a href="tel:+529211371704">
+              <a :href="`tel:+${whatsappNumber}`">
                 921 137 1704
               </a>
               <a

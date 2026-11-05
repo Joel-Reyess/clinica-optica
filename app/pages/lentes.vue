@@ -16,7 +16,7 @@ useHead({
   ]
 })
 
-const whatsappNumber = '529211371704'
+const { numero: whatsappNumber } = useWhatsapp()
 const adviceMessage = encodeURIComponent(
   'Hola, quisiera recibir asesoría sobre lentes y servicios de Clínica Óptica.'
 )

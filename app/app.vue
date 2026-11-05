@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
-import NavbarClient from './components/NavbarClient.vue'
-import FooterClient from './components/FooterClient.vue'
 
 const route = useRoute()
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
@@ -50,8 +48,8 @@ onBeforeUnmount(() => revealObserver?.disconnect())
 
 <template>
   <UApp>
-    <NavbarClient v-if="!isAdminRoute" />
-    <NuxtPage />
-    <FooterClient v-if="!isAdminRoute" />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </UApp>
 </template>

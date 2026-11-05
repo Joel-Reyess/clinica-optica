@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import AppLogo from './AppLogo.vue'
 
+const { url: waUrl, numero } = useWhatsapp()
+
 const privacyDialog = ref<HTMLDialogElement | null>(null)
 const faqDialog = ref<HTMLDialogElement | null>(null)
 
@@ -75,7 +77,7 @@ function closePrivacyDialog() {
 
       <a
         class="footer-detail"
-        href="https://wa.me/529211371704"
+        :href="waUrl()"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -92,7 +94,7 @@ function closePrivacyDialog() {
 
       <a
         class="footer-detail"
-        href="tel:+529211371704"
+        :href="`tel:+${numero}`"
       >
         <UIcon
           name="i-lucide-phone"
@@ -315,7 +317,7 @@ function closePrivacyDialog() {
           </p>
           <a
             class="faq-dialog-contact"
-            href="https://wa.me/529211371704?text=Hola%2C%20tengo%20una%20pregunta."
+            :href="waUrl('Hola, tengo una pregunta.')"
             target="_blank"
             rel="noopener noreferrer"
           >

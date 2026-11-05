@@ -32,6 +32,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
+    '/servicios': { redirect: '/lentes' },
     '/images/**': {
       headers: {
         'cache-control': 'public, max-age=604800'

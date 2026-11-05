@@ -6,6 +6,8 @@ import {
   setQuoteRequestDraft
 } from '~/utils/prescriptionDraft'
 
+const { url: waUrl } = useWhatsapp()
+
 const heroVideoSource = '/hero-eyewear-ping-pong.mp4'
 
 useHead({
@@ -171,7 +173,7 @@ function preparePatientRequest() {
     'Entiendo que el equipo verificará mi identidad antes de compartir información de mi expediente o pedido.'
   ].filter(Boolean).join('\n')
 
-  patientRequestUrl.value = `https://wa.me/529211371704?text=${encodeURIComponent(message)}`
+  patientRequestUrl.value = waUrl(message)
 }
 
 function resetPatientRequestOrderState() {
@@ -705,7 +707,7 @@ const frameCards = [
 
     <a
       class="whatsapp-float"
-      href="https://wa.me/529211371704"
+      :href="waUrl()"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Escríbenos por WhatsApp"

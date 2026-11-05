@@ -17,7 +17,7 @@ useHead({
 
 const route = useRoute()
 const router = useRouter()
-const whatsappNumber = '529211371704'
+const { numero: whatsappNumber } = useWhatsapp()
 const campaignDialog = ref<HTMLDialogElement | null>(null)
 const serviceSelect = ref<HTMLElement | null>(null)
 const serviceMenuOpen = ref(false)

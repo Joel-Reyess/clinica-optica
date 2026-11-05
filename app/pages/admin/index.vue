@@ -2,6 +2,8 @@
 const route = useRoute()
 const mobileMenuOpen = ref(false)
 
+definePageMeta({ layout: 'admin' })
+
 useHead({
   title: 'Panel de administración | Clínica Óptica',
   meta: [

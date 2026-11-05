@@ -19,7 +19,7 @@ useHead({
 
 const route = useRoute()
 const sharedPrescription = getPrescriptionDraft()
-const whatsappNumber = '529211371704'
+const { numero: whatsappNumber } = useWhatsapp()
 const contactOptions = [
   { value: 'with-frame', label: 'Armazón con micas graduadas' },
   { value: 'own-frame', label: 'Cambio de micas en un armazón propio' }

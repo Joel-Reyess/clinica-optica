@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 
+const { url: waUrl } = useWhatsapp()
+
 useHead({
   title: 'Pedir información | Clínica Óptica',
   meta: [
@@ -36,7 +38,7 @@ function prepareInformationRequest() {
     `Contacto: ${form.contact.trim()}`
   ].join('\n')
 
-  preparedUrl.value = `https://wa.me/529211371704?text=${encodeURIComponent(message)}`
+  preparedUrl.value = waUrl(message)
 }
 </script>
 
