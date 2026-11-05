@@ -23,8 +23,9 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
+    dbPath: './data/clinica.db',
     public: {
-      apiBase: 'http://localhost:8000/api',
+      apiBase: '/api',
       whatsappNumber: '529211371704'
     }
   },
