@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import type { CitaInput } from '#shared/schemas/cita'
+
+const { url: waUrl } = useWhatsapp()
+const { crearCita } = useSolicitudes()
+const { pending, error, fieldErrors, submit } = useSubmit(crearCita)
 
 useHead({
   title: 'Solicitar cita | Clínica Óptica',
@@ -26,32 +31,38 @@ const visibleMonth = ref(new Date(today.getFullYear(), today.getMonth(), 1))
 const selectedDate = ref('')
 const dateError = ref('')
 const serviceError = ref('')
-const showPreview = ref(false)
+const showPreview = ref(false) // true = solicitud enviada
 const appointmentPrivacy = ref(false)
 const serviceSelect = ref<HTMLElement | null>(null)
 const serviceMenuOpen = ref(false)
 const activeServiceIndex = ref(0)
 const patientStatuses = [
-  { value: 'new', label: 'Paciente nuevo', icon: 'i-lucide-user-round-plus' },
-  { value: 'returning', label: 'Ya me he atendido', icon: 'i-lucide-user-round-check' }
+  { value: 'nuevo', label: 'Paciente nuevo', icon: 'i-lucide-user-round-plus' },
+  { value: 'existente', label: 'Ya me he atendido', icon: 'i-lucide-user-round-check' }
 ]
-const services = [
-  'Examen de la vista',
-  'Valoración visual',
-  'Asesoría para elegir lentes',
-  'Ajuste de armazón',
-  'Otro servicio'
-]
-const appointment = reactive({
+const serviceValues: Record<string, CitaInput['servicio']> = {
+  'Examen de la vista': 'examen-vista',
+  'Valoración visual': 'valoracion-visual',
+  'Asesoría para elegir lentes': 'asesoria-lentes',
+  'Ajuste de armazón': 'ajuste-armazon',
+  'Otro servicio': 'otro'
+}
+const services = Object.keys(serviceValues)
+const emptyAppointment = () => ({
   name: '',
   phone: '',
+  email: '',
   service: '',
   patientStatus: '',
   isMinor: false,
   responsibleName: '',
   responsiblePhone: '',
-  time: ''
+  time: '',
+  trap: ''
 })
+const appointment = reactive(emptyAppointment())
+const confirmationRef = ref('')
+const confirmationUrl = ref('')
 
 const monthTitle = computed(() => monthFormatter.format(visibleMonth.value))
 const calendarCells = computed(() => {
@@ -182,7 +193,7 @@ onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', closeServiceMenuOnOutsideClick)
 })
 
-function previewAppointment() {
+async function sendAppointment() {
   if (!selectedDate.value) {
     dateError.value = 'Elige un día disponible para continuar.'
     return
@@ -193,10 +204,40 @@ function previewAppointment() {
     return
   }
 
+  const ref = await submit({
+    nombre: appointment.name,
+    telefono: appointment.phone,
+    correo: appointment.email,
+    servicio: serviceValues[appointment.service]!,
+    tipoPaciente: appointment.patientStatus as CitaInput['tipoPaciente'],
+    fecha: selectedDate.value,
+    hora: appointment.time,
+    esMenor: appointment.isMinor,
+    responsableNombre: appointment.responsibleName,
+    responsableTelefono: appointment.responsiblePhone,
+    aceptaPrivacidad: appointmentPrivacy.value as true,
+    sitioWeb: appointment.trap
+  })
+  if (!ref) {
+    // El error de fecha del servidor se muestra junto al calendario
+    if (fieldErrors.value.fecha) dateError.value = fieldErrors.value.fecha
+    return // falló: se conserva todo lo escrito
+  }
+
+  confirmationRef.value = ref
+  confirmationUrl.value = waUrl([
+    'Hola, acabo de solicitar una cita desde la página.',
+    `Paciente: ${appointment.name}`,
+    `Día preferido: ${selectedDateLabel.value}, ${appointment.time}`,
+    `Referencia: ${ref}`
+  ].join('\n'))
   showPreview.value = true
 }
 
 function editAppointment() {
+  Object.assign(appointment, emptyAppointment())
+  selectedDate.value = ''
+  appointmentPrivacy.value = false
   showPreview.value = false
 }
 </script>
@@ -268,7 +309,8 @@ function editAppointment() {
           v-if="!showPreview"
           key="form"
           class="appointment-form"
-          @submit.prevent="previewAppointment"
+          novalidate
+          @submit.prevent="sendAppointment"
         >
           <div class="appointment-form-heading">
             <span class="appointment-heading-icon">
@@ -295,13 +337,19 @@ function editAppointment() {
                   aria-hidden="true"
                 />
                 <input
-                  v-model.trim="appointment.name"
+                  v-model="appointment.name"
                   autocomplete="name"
                   name="name"
                   placeholder="Nombre completo"
-                  required
                 >
               </span>
+              <small
+                v-if="fieldErrors.nombre"
+                class="appointment-field-error"
+                role="alert"
+              >
+                {{ fieldErrors.nombre }}
+              </small>
             </label>
 
             <label class="appointment-field">
@@ -312,14 +360,44 @@ function editAppointment() {
                   aria-hidden="true"
                 />
                 <input
-                  v-model.trim="appointment.phone"
+                  v-model="appointment.phone"
                   autocomplete="tel"
                   name="phone"
                   type="tel"
                   placeholder="Tu número de contacto"
-                  required
                 >
               </span>
+              <small
+                v-if="fieldErrors.telefono"
+                class="appointment-field-error"
+                role="alert"
+              >
+                {{ fieldErrors.telefono }}
+              </small>
+            </label>
+
+            <label class="appointment-field">
+              <span>Correo <small>(opcional)</small></span>
+              <span class="appointment-input-wrap">
+                <UIcon
+                  name="i-lucide-mail"
+                  aria-hidden="true"
+                />
+                <input
+                  v-model="appointment.email"
+                  autocomplete="email"
+                  name="email"
+                  type="email"
+                  placeholder="tucorreo@ejemplo.com"
+                >
+              </span>
+              <small
+                v-if="fieldErrors.correo"
+                class="appointment-field-error"
+                role="alert"
+              >
+                {{ fieldErrors.correo }}
+              </small>
             </label>
 
             <div class="appointment-field">
@@ -417,7 +495,6 @@ function editAppointment() {
                     type="radio"
                     name="patient-status"
                     :value="status.value"
-                    required
                   >
                   <UIcon
                     :name="status.icon"
@@ -431,6 +508,13 @@ function editAppointment() {
                   />
                 </label>
               </div>
+              <small
+                v-if="fieldErrors.tipoPaciente"
+                class="appointment-field-error"
+                role="alert"
+              >
+                {{ fieldErrors.tipoPaciente }}
+              </small>
             </fieldset>
 
             <label class="appointment-minor-toggle">
@@ -463,13 +547,19 @@ function editAppointment() {
                     aria-hidden="true"
                   />
                   <input
-                    v-model.trim="appointment.responsibleName"
+                    v-model="appointment.responsibleName"
                     autocomplete="name"
                     name="responsibleName"
                     placeholder="Nombre de madre, padre o responsable"
-                    required
                   >
                 </span>
+                <small
+                  v-if="fieldErrors.responsableNombre"
+                  class="appointment-field-error"
+                  role="alert"
+                >
+                  {{ fieldErrors.responsableNombre }}
+                </small>
               </label>
               <label class="appointment-field">
                 <span>Teléfono del responsable <b>*</b></span>
@@ -479,14 +569,20 @@ function editAppointment() {
                     aria-hidden="true"
                   />
                   <input
-                    v-model.trim="appointment.responsiblePhone"
+                    v-model="appointment.responsiblePhone"
                     autocomplete="tel"
                     name="responsiblePhone"
                     type="tel"
                     placeholder="Teléfono de contacto"
-                    required
                   >
                 </span>
+                <small
+                  v-if="fieldErrors.responsableTelefono"
+                  class="appointment-field-error"
+                  role="alert"
+                >
+                  {{ fieldErrors.responsableTelefono }}
+                </small>
               </label>
             </div>
           </div>
@@ -599,9 +695,15 @@ function editAppointment() {
                     v-model="appointment.time"
                     name="time"
                     type="time"
-                    required
                   >
                 </span>
+                <small
+                  v-if="fieldErrors.hora"
+                  class="appointment-field-error"
+                  role="alert"
+                >
+                  {{ fieldErrors.hora }}
+                </small>
               </label>
               <div
                 class="appointment-date-summary"
@@ -626,7 +728,7 @@ function editAppointment() {
             <input
               v-model="appointmentPrivacy"
               type="checkbox"
-              required
+              name="aceptaPrivacidad"
             >
             <span class="appointment-privacy-check">
               <UIcon
@@ -635,17 +737,48 @@ function editAppointment() {
               />
             </span>
             <span>
-              He leído el aviso de privacidad para esta demostración.
-              <NuxtLink to="/contacto">Aviso de privacidad</NuxtLink>
+              Acepto el aviso de privacidad.
+              <NuxtLink
+                to="/privacidad"
+                target="_blank"
+              >Ver aviso de privacidad</NuxtLink>
             </span>
           </label>
+          <small
+            v-if="fieldErrors.aceptaPrivacidad"
+            class="appointment-field-error"
+            role="alert"
+          >
+            {{ fieldErrors.aceptaPrivacidad }}
+          </small>
+          <div
+            class="hp-field"
+            aria-hidden="true"
+          >
+            <label for="appointment-trap">No llenar este campo</label>
+            <input
+              id="appointment-trap"
+              v-model="appointment.trap"
+              name="sitioWeb"
+              tabindex="-1"
+              autocomplete="off"
+            >
+          </div>
+          <p
+            v-if="error"
+            class="form-error"
+            role="alert"
+          >
+            {{ error }}
+          </p>
 
           <div class="appointment-submit-row">
             <button
               class="appointment-submit-button"
               type="submit"
+              :disabled="pending"
             >
-              Ver confirmación de ejemplo
+              {{ pending ? 'Enviando…' : 'Solicitar cita' }}
               <UIcon
                 name="i-lucide-arrow-right"
                 aria-hidden="true"
@@ -656,7 +789,7 @@ function editAppointment() {
                 name="i-lucide-info"
                 aria-hidden="true"
               />
-              Vista de demostración: esta solicitud no se guarda ni se envía.
+              Es una solicitud: el horario queda pendiente de confirmación por el equipo.
             </p>
           </div>
         </form>
@@ -675,13 +808,13 @@ function editAppointment() {
             />
           </span>
           <p class="appointment-step-label">
-            Vista previa de confirmación
+            Solicitud recibida
           </p>
           <h2 id="appointment-confirmation-title">
             Tu cita está pendiente de confirmación.
           </h2>
           <p class="confirmation-copy">
-            El equipo revisará el horario solicitado y confirmará el espacio o te propondrá otra opción. La reserva solo quedaría registrada después de acordar la disponibilidad.
+            Recibimos tu solicitud. El equipo revisará el horario y confirmará el espacio o te propondrá otra opción. La cita queda registrada hasta que acordemos la disponibilidad.
           </p>
           <div class="confirmation-summary">
             <div>
@@ -706,8 +839,16 @@ function editAppointment() {
               name="i-lucide-info"
               aria-hidden="true"
             />
-            Esta es solo una demostración visual. No hemos guardado ni enviado tu solicitud.
+            Tu referencia: {{ confirmationRef }}. Puedes continuar por WhatsApp si lo prefieres.
           </p>
+          <a
+            class="appointment-submit-button"
+            :href="confirmationUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Continuar por WhatsApp
+          </a>
           <button
             class="appointment-submit-button"
             type="button"
@@ -717,7 +858,7 @@ function editAppointment() {
               name="i-lucide-arrow-left"
               aria-hidden="true"
             />
-            Volver al formulario
+            Hacer otra solicitud
           </button>
         </section>
       </Transition>

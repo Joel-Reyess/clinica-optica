@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import type { EmpresaInput } from '#shared/schemas/empresa'
 import campaignImage from '~/assets/RecOpt.webp'
 import graduatedFramesImage from '~/assets/FondoPrincipal.webp'
 import safetyGlasses from '~/assets/Seguridad.webp'
@@ -17,19 +18,18 @@ useHead({
 
 const route = useRoute()
 const router = useRouter()
-const { numero: whatsappNumber } = useWhatsapp()
+const { numero: whatsappNumber, url: waUrl } = useWhatsapp()
 const campaignDialog = ref<HTMLDialogElement | null>(null)
 const serviceSelect = ref<HTMLElement | null>(null)
 const serviceMenuOpen = ref(false)
 const activeServiceIndex = ref(0)
-const serviceOptions = [
-  'Campañas de salud visual',
-  'Lentes graduados',
-  'Lentes de seguridad graduados',
-  'Convenio empresarial',
-  'Otra necesidad'
-]
-const campaignRequest = reactive({
+const serviceValues: Record<string, EmpresaInput['servicio']> = {
+  'Evaluación visual': 'evaluacion-visual',
+  'Lentes oftálmicos': 'lentes-oftalmicos',
+  'Lentes de seguridad graduados': 'lentes-seguridad-graduados'
+}
+const serviceOptions = Object.keys(serviceValues)
+const emptyRequest = () => ({
   company: '',
   contactName: '',
   area: '',
@@ -37,13 +37,20 @@ const campaignRequest = reactive({
   phone: '',
   email: '',
   participants: '',
-  service: 'Campañas de salud visual',
+  service: 'Evaluación visual',
   date: '',
-  comments: ''
+  comments: '',
+  privacy: false,
+  trap: ''
 })
+const campaignRequest = reactive(emptyRequest())
 const preparedRequestUrl = ref('')
+const sent = ref(false)
+const { crearEmpresa } = useSolicitudes()
+const { pending, error, fieldErrors, submit } = useSubmit(crearEmpresa)
 
 function openCampaignDialog() {
+  sent.value = false
   preparedRequestUrl.value = ''
   serviceMenuOpen.value = false
   campaignDialog.value?.showModal()
@@ -67,7 +74,6 @@ function openServiceMenu() {
 
 function chooseService(service: string) {
   campaignRequest.service = service
-  preparedRequestUrl.value = ''
   serviceMenuOpen.value = false
 }
 
@@ -131,23 +137,30 @@ onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', closeServiceMenuOnOutsideClick)
 })
 
-function prepareCampaignRequest() {
-  const lines = [
-    'Tipo de solicitud: Empresa',
-    'Motivo: Solicitud de campaña / propuesta',
-    `Empresa: ${campaignRequest.company.trim()}`,
-    `Persona de contacto: ${campaignRequest.contactName.trim()}`,
-    `Área: ${campaignRequest.area.trim()}`,
-    `Ciudad o sede: ${campaignRequest.city.trim()}`,
-    campaignRequest.phone.trim() ? `Teléfono: ${campaignRequest.phone.trim()}` : '',
-    campaignRequest.email.trim() ? `Correo: ${campaignRequest.email.trim()}` : '',
-    `Número aproximado de interesados: ${campaignRequest.participants}`,
-    `Servicio requerido: ${campaignRequest.service}`,
-    campaignRequest.date ? `Fecha tentativa: ${campaignRequest.date}` : '',
-    campaignRequest.comments.trim() ? `Comentarios: ${campaignRequest.comments.trim()}` : ''
-  ].filter(Boolean)
+async function sendCampaignRequest() {
+  const ref = await submit({
+    empresa: campaignRequest.company,
+    nombre: campaignRequest.contactName,
+    area: campaignRequest.area,
+    ciudad: campaignRequest.city,
+    telefono: campaignRequest.phone,
+    correo: campaignRequest.email,
+    interesados: campaignRequest.participants,
+    servicio: serviceValues[campaignRequest.service]!,
+    fechaTentativa: campaignRequest.date,
+    comentarios: campaignRequest.comments,
+    aceptaPrivacidad: campaignRequest.privacy as true,
+    sitioWeb: campaignRequest.trap
+  } as unknown as EmpresaInput)
+  if (!ref) return // falló: se conserva lo escrito
 
-  preparedRequestUrl.value = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(lines.join('\n'))}`
+  preparedRequestUrl.value = waUrl([
+    'Hola, acabo de enviar una solicitud de propuesta para mi empresa desde la página.',
+    `Empresa: ${campaignRequest.company}`,
+    `Referencia: ${ref}`
+  ].join('\n'))
+  Object.assign(campaignRequest, emptyRequest())
+  sent.value = true
 }
 
 const solutions = [
@@ -575,81 +588,112 @@ const benefits = [
           <h2 id="campaign-form-title">
             Cuéntanos sobre tu empresa.
           </h2>
-          <p>Comparte los datos básicos y prepara tu solicitud en WhatsApp. La fecha y los comentarios son opcionales.</p>
+          <p>Comparte los datos básicos y el equipo te enviará una propuesta. El correo, la fecha y los comentarios son opcionales.</p>
         </div>
 
         <form
+          v-if="!sent"
           class="business-form"
-          @input="preparedRequestUrl = ''"
-          @submit.prevent="prepareCampaignRequest"
+          novalidate
+          @submit.prevent="sendCampaignRequest"
         >
           <div class="business-form-grid">
             <div class="business-field">
               <label for="business-company">Empresa <span aria-hidden="true">*</span></label>
               <input
                 id="business-company"
-                v-model.trim="campaignRequest.company"
+                v-model="campaignRequest.company"
                 name="company"
                 autocomplete="organization"
-                required
                 placeholder="Nombre de la empresa"
               >
+              <p
+                v-if="fieldErrors.empresa"
+                class="field-error"
+              >
+                {{ fieldErrors.empresa }}
+              </p>
             </div>
             <div class="business-field">
               <label for="business-contact-name">Persona de contacto <span aria-hidden="true">*</span></label>
               <input
                 id="business-contact-name"
-                v-model.trim="campaignRequest.contactName"
+                v-model="campaignRequest.contactName"
                 name="contactName"
                 autocomplete="name"
-                required
                 placeholder="Nombre de quien coordina"
               >
+              <p
+                v-if="fieldErrors.nombre"
+                class="field-error"
+              >
+                {{ fieldErrors.nombre }}
+              </p>
             </div>
             <div class="business-field">
               <label for="business-area">Área o departamento <span aria-hidden="true">*</span></label>
               <input
                 id="business-area"
-                v-model.trim="campaignRequest.area"
+                v-model="campaignRequest.area"
                 name="area"
-                required
                 placeholder="Recursos Humanos, Compras..."
               >
+              <p
+                v-if="fieldErrors.area"
+                class="field-error"
+              >
+                {{ fieldErrors.area }}
+              </p>
             </div>
             <div class="business-field">
               <label for="business-city">Ciudad o sede <span aria-hidden="true">*</span></label>
               <input
                 id="business-city"
-                v-model.trim="campaignRequest.city"
+                v-model="campaignRequest.city"
                 name="city"
                 autocomplete="address-level2"
-                required
                 placeholder="Ciudad donde se realizaría"
               >
+              <p
+                v-if="fieldErrors.ciudad"
+                class="field-error"
+              >
+                {{ fieldErrors.ciudad }}
+              </p>
             </div>
             <div class="business-field">
-              <label for="business-phone">Teléfono <span>(requerido si no agregas correo)</span></label>
+              <label for="business-phone">WhatsApp o teléfono <span aria-hidden="true">*</span></label>
               <input
                 id="business-phone"
-                v-model.trim="campaignRequest.phone"
+                v-model="campaignRequest.phone"
                 name="phone"
                 type="tel"
                 autocomplete="tel"
-                :required="!campaignRequest.email"
-                placeholder="Número de contacto"
+                placeholder="10 dígitos"
               >
+              <p
+                v-if="fieldErrors.telefono"
+                class="field-error"
+              >
+                {{ fieldErrors.telefono }}
+              </p>
             </div>
             <div class="business-field">
-              <label for="business-email">Correo <span>(requerido si no agregas teléfono)</span></label>
+              <label for="business-email">Correo <span>(opcional)</span></label>
               <input
                 id="business-email"
-                v-model.trim="campaignRequest.email"
+                v-model="campaignRequest.email"
                 name="email"
                 type="email"
                 autocomplete="email"
-                :required="!campaignRequest.phone"
                 placeholder="nombre@empresa.com"
               >
+              <p
+                v-if="fieldErrors.correo"
+                class="field-error"
+              >
+                {{ fieldErrors.correo }}
+              </p>
             </div>
             <div class="business-field">
               <label for="business-participants">Número aproximado de interesados <span aria-hidden="true">*</span></label>
@@ -660,9 +704,14 @@ const benefits = [
                 type="number"
                 min="1"
                 step="1"
-                required
                 placeholder="Ej. 25"
               >
+              <p
+                v-if="fieldErrors.interesados"
+                class="field-error"
+              >
+                {{ fieldErrors.interesados }}
+              </p>
             </div>
             <div class="business-field">
               <label for="business-service">Servicio requerido <span aria-hidden="true">*</span></label>
@@ -732,6 +781,12 @@ const benefits = [
                   name="service"
                   :value="campaignRequest.service"
                 >
+                <p
+                  v-if="fieldErrors.servicio"
+                  class="field-error"
+                >
+                  {{ fieldErrors.servicio }}
+                </p>
               </div>
             </div>
             <div class="business-field">
@@ -742,61 +797,113 @@ const benefits = [
                 name="date"
                 type="date"
               >
+              <p
+                v-if="fieldErrors.fechaTentativa"
+                class="field-error"
+              >
+                {{ fieldErrors.fechaTentativa }}
+              </p>
             </div>
             <div class="business-field business-field-wide">
               <label for="business-comments">Comentarios <span>(opcional)</span></label>
               <textarea
                 id="business-comments"
-                v-model.trim="campaignRequest.comments"
+                v-model="campaignRequest.comments"
                 name="comments"
                 rows="4"
                 maxlength="1000"
                 placeholder="Cuéntanos sobre horarios, espacio u otra necesidad."
               />
+              <p
+                v-if="fieldErrors.comentarios"
+                class="field-error"
+              >
+                {{ fieldErrors.comentarios }}
+              </p>
             </div>
           </div>
+          <div
+            class="hp-field"
+            aria-hidden="true"
+          >
+            <label for="business-trap">No llenar este campo</label>
+            <input
+              id="business-trap"
+              v-model="campaignRequest.trap"
+              name="sitioWeb"
+              tabindex="-1"
+              autocomplete="off"
+            >
+          </div>
+          <label class="form-privacy">
+            <input
+              v-model="campaignRequest.privacy"
+              type="checkbox"
+              name="privacy"
+            >
+            <span>
+              Acepto el <NuxtLink
+                to="/privacidad"
+                target="_blank"
+              >aviso de privacidad</NuxtLink>.
+            </span>
+          </label>
+          <p
+            v-if="fieldErrors.aceptaPrivacidad"
+            class="field-error"
+          >
+            {{ fieldErrors.aceptaPrivacidad }}
+          </p>
+          <p
+            v-if="error"
+            class="form-error"
+            role="alert"
+          >
+            {{ error }}
+          </p>
           <div class="business-form-actions">
             <button
               class="business-button primary-button"
               type="submit"
+              :disabled="pending"
             >
-              Preparar solicitud en WhatsApp
+              {{ pending ? 'Enviando…' : 'Solicitar propuesta para mi empresa' }}
               <UIcon
-                name="i-lucide-message-circle"
+                name="i-lucide-arrow-right"
                 aria-hidden="true"
               />
             </button>
-            <p>Los datos no se guardan en este sitio ni se envían por correo. Revísalos en WhatsApp y pulsa <strong>Enviar</strong> para compartirlos; eso no confirma una campaña.</p>
-          </div>
-          <div
-            v-if="preparedRequestUrl"
-            class="prepared-request"
-            role="status"
-            aria-live="polite"
-          >
-            <span class="prepared-request-icon">
-              <UIcon
-                name="i-lucide-message-circle-check"
-                aria-hidden="true"
-              />
-            </span>
-            <div>
-              <strong>Tu mensaje está preparado; todavía no se ha enviado.</strong>
-              <p>Abre WhatsApp y pulsa Enviar para que el equipo reciba los datos. Esto no confirma la disponibilidad ni la realización de una campaña.</p>
-              <a
-                :href="preparedRequestUrl"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Abrir WhatsApp
-                <UIcon
-                  name="i-lucide-arrow-up-right"
-                  aria-hidden="true"
-                />
-              </a>
-            </div>
+            <p>El equipo revisará tu solicitud y se pondrá en contacto contigo. Enviarla no confirma una campaña.</p>
           </div>
         </form>
+        <div
+          v-else
+          class="prepared-request"
+          role="status"
+          aria-live="polite"
+        >
+          <span class="prepared-request-icon">
+            <UIcon
+              name="i-lucide-message-circle-check"
+              aria-hidden="true"
+            />
+          </span>
+          <div>
+            <strong>¡Recibimos tu solicitud!</strong>
+            <p>El equipo te contactará pronto. Si prefieres, también puedes continuar la conversación por WhatsApp.</p>
+            <a
+              :href="preparedRequestUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Continuar por WhatsApp
+              <UIcon
+                name="i-lucide-arrow-up-right"
+                aria-hidden="true"
+              />
+            </a>
+          </div>
+        </div>
       </section>
     </dialog>
 

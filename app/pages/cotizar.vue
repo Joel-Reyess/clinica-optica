@@ -7,6 +7,8 @@ import {
   setQuoteRequestDraft
 } from '~/utils/prescriptionDraft'
 
+import type { CotizacionInput } from '#shared/schemas/cotizacion'
+
 useHead({
   title: 'Cotizar lentes graduados | Clínica Óptica',
   meta: [
@@ -19,28 +21,30 @@ useHead({
 
 const route = useRoute()
 const sharedPrescription = getPrescriptionDraft()
-const { numero: whatsappNumber } = useWhatsapp()
+const { url: waUrl } = useWhatsapp()
+const { crearCotizacion } = useSolicitudes()
+const { pending, error, fieldErrors, submit } = useSubmit(crearCotizacion)
 const contactOptions = [
-  { value: 'with-frame', label: 'Armazón con micas graduadas' },
-  { value: 'own-frame', label: 'Cambio de micas en un armazón propio' }
+  { value: 'armazon-con-micas', label: 'Armazón con micas graduadas' },
+  { value: 'solo-micas', label: 'Cambio de micas en un armazón propio' }
 ]
 const visionOptions = [
-  { value: 'has-prescription', label: 'Tengo receta' },
-  { value: 'needs-exam', label: 'Necesito una evaluación' },
-  { value: 'previous-patient', label: 'Ya me atendieron en Clínica Óptica' }
+  { value: 'tengo-receta', label: 'Tengo receta' },
+  { value: 'necesito-evaluacion', label: 'Necesito una evaluación' },
+  { value: 'ya-me-atendieron', label: 'Ya me atendieron en Clínica Óptica' }
 ]
 const lensTypes = [
-  'Monofocal',
-  'Bifocal',
-  'Progresivo',
-  'Necesito asesoría'
+  { value: 'monofocal', label: 'Monofocal' },
+  { value: 'bifocal', label: 'Bifocal' },
+  { value: 'progresivo', label: 'Progresivo' },
+  { value: 'asesoria', label: 'Necesito asesoría' }
 ]
 const lensTreatments = [
-  'Antirreflejante',
-  'Filtro azul',
-  'Fotocromático',
-  'Polarizado',
-  'Necesito asesoría'
+  { value: 'antirreflejante', label: 'Antirreflejante' },
+  { value: 'filtro-azul', label: 'Filtro azul' },
+  { value: 'fotocromatico', label: 'Fotocromático' },
+  { value: 'polarizado', label: 'Polarizado' },
+  { value: 'asesoria', label: 'Necesito asesoría' }
 ]
 
 function queryText(value: unknown) {
@@ -65,11 +69,13 @@ const startWithPrescription = computed(
 
 const form = reactive({
   frameOption: '',
-  visionStatus: startWithPrescription.value ? 'has-prescription' : '',
+  visionStatus: startWithPrescription.value ? 'tengo-receta' : '',
   lensType: '',
   treatments: [] as string[],
   name: '',
   contact: '',
+  email: '',
+  trap: '',
   requestReason: '',
   workRequirements: '',
   privacyAccepted: false
@@ -77,8 +83,9 @@ const form = reactive({
 const prescription = ref<File | null>(sharedPrescription)
 const prescriptionError = ref('')
 const preparedUrl = ref('')
+const sent = ref(false)
 
-const needsPrescription = computed(() => form.visionStatus === 'has-prescription')
+const needsPrescription = computed(() => form.visionStatus === 'tengo-receta')
 
 onMounted(() => {
   const requestDraft = getQuoteRequestDraft()
@@ -123,31 +130,34 @@ function selectPrescription(event: Event) {
   setPrescriptionDraft(file)
 }
 
-function prepareQuoteRequest() {
+async function sendQuoteRequest() {
   if (prescriptionError.value) return
 
-  const requestLines = [
-    'Tipo de solicitud: Cotización',
-    form.requestReason ? `Motivo: ${form.requestReason}` : '',
-    selectedCategoryLabel.value ? `Categoría: ${selectedCategoryLabel.value}` : '',
-    modelName.value ? `Modelo: ${modelName.value}` : '',
-    modelCode.value ? `Código: ${modelCode.value}` : '',
-    modelColor.value ? `Color elegido: ${modelColor.value}` : '',
-    `Necesito: ${contactOptions.find(option => option.value === form.frameOption)?.label ?? ''}`,
-    `Situación visual: ${visionOptions.find(option => option.value === form.visionStatus)?.label ?? ''}`,
-    needsPrescription.value
-      ? `Receta: ${prescription.value?.name ?? 'La adjuntaré en este chat de WhatsApp'}`
-      : 'Receta: No adjunta; solicito orientación según mi situación visual.',
-    `Tipo de lentes: ${form.lensType}`,
-    `Tratamientos de interés: ${form.treatments.join(', ') || 'Ninguno seleccionado'}`,
-    form.workRequirements.trim()
-      ? `Requisitos de seguridad del trabajo: ${form.workRequirements.trim()}`
-      : '',
-    `Nombre: ${form.name.trim()}`,
-    `Contacto: ${form.contact.trim()}`
-  ].filter(Boolean)
+  const ref = await submit({
+    nombre: form.name,
+    telefono: form.contact,
+    correo: form.email,
+    opcionArmazon: form.frameOption as CotizacionInput['opcionArmazon'],
+    situacionVisual: form.visionStatus as CotizacionInput['situacionVisual'],
+    tipoLente: form.lensType as CotizacionInput['tipoLente'],
+    tratamientos: form.treatments as CotizacionInput['tratamientos'],
+    modelo: modelName.value,
+    categoria: selectedCategoryLabel.value,
+    codigo: modelCode.value,
+    color: modelColor.value,
+    motivo: form.requestReason,
+    requisitosTrabajo: form.workRequirements,
+    aceptaPrivacidad: form.privacyAccepted as true,
+    sitioWeb: form.trap
+  })
+  if (!ref) return // falló: el formulario conserva lo que escribió
 
-  preparedUrl.value = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(requestLines.join('\n'))}`
+  preparedUrl.value = waUrl([
+    'Hola, acabo de enviar una solicitud de cotización desde la página.',
+    modelName.value ? `Modelo: ${modelName.value}` : '',
+    `Referencia: ${ref}`
+  ].filter(Boolean).join('\n'))
+  sent.value = true
 }
 </script>
 
@@ -194,8 +204,8 @@ function prepareQuoteRequest() {
     <div class="quote-layout">
       <form
         class="quote-form"
-        @input="preparedUrl = ''"
-        @submit.prevent="prepareQuoteRequest"
+        novalidate
+        @submit.prevent="sendQuoteRequest"
       >
         <section
           class="quote-form-section"
@@ -224,11 +234,10 @@ function prepareQuoteRequest() {
                 type="radio"
                 name="frame-option"
                 :value="option.value"
-                required
               >
               <span class="quote-choice-icon">
                 <UIcon
-                  :name="option.value === 'with-frame' ? 'i-lucide-glasses' : 'i-lucide-refresh-cw'"
+                  :name="option.value === 'armazon-con-micas' ? 'i-lucide-glasses' : 'i-lucide-refresh-cw'"
                   aria-hidden="true"
                 />
               </span>
@@ -241,7 +250,14 @@ function prepareQuoteRequest() {
             </label>
           </div>
           <p
-            v-if="form.frameOption === 'own-frame'"
+            v-if="fieldErrors.opcionArmazon"
+            class="field-error"
+            role="alert"
+          >
+            {{ fieldErrors.opcionArmazon }}
+          </p>
+          <p
+            v-if="form.frameOption === 'solo-micas'"
             class="quote-inline-note"
           >
             Si eliges cambio de micas, el equipo revisará en persona el estado y la compatibilidad de tu armazón antes de cotizar.
@@ -274,12 +290,18 @@ function prepareQuoteRequest() {
                 type="radio"
                 name="vision-status"
                 :value="option.value"
-                required
               >
               <span class="custom-radio" />
               <span>{{ option.label }}</span>
             </label>
           </div>
+          <p
+            v-if="fieldErrors.situacionVisual"
+            class="field-error"
+            role="alert"
+          >
+            {{ fieldErrors.situacionVisual }}
+          </p>
 
           <div
             v-if="needsPrescription"
@@ -300,7 +322,7 @@ function prepareQuoteRequest() {
                 name="i-lucide-paperclip"
                 aria-hidden="true"
               />
-              {{ prescription.name }} · Se adjuntará manualmente en WhatsApp.
+              {{ prescription.name }}
             </p>
             <p
               v-else
@@ -331,7 +353,7 @@ function prepareQuoteRequest() {
             <span>(opcional)</span>
             <textarea
               id="quote-work-requirements"
-              v-model.trim="form.workRequirements"
+              v-model="form.workRequirements"
               rows="3"
               placeholder="Por ejemplo: tipo de protección requerida o actividad que realizas"
             />
@@ -361,7 +383,6 @@ function prepareQuoteRequest() {
           <select
             id="quote-lens-type"
             v-model="form.lensType"
-            required
           >
             <option
               disabled
@@ -371,24 +392,31 @@ function prepareQuoteRequest() {
             </option>
             <option
               v-for="type in lensTypes"
-              :key="type"
-              :value="type"
+              :key="type.value"
+              :value="type.value"
             >
-              {{ type }}
+              {{ type.label }}
             </option>
           </select>
+          <p
+            v-if="fieldErrors.tipoLente"
+            class="field-error"
+            role="alert"
+          >
+            {{ fieldErrors.tipoLente }}
+          </p>
           <fieldset class="treatments-fieldset">
             <legend>Tratamientos de interés <span>(puedes elegir varios)</span></legend>
             <div class="treatment-options">
               <label
                 v-for="treatment in lensTreatments"
-                :key="treatment"
+                :key="treatment.value"
                 class="treatment-option"
               >
                 <input
                   v-model="form.treatments"
                   type="checkbox"
-                  :value="treatment"
+                  :value="treatment.value"
                 >
                 <span class="custom-checkbox">
                   <UIcon
@@ -396,7 +424,7 @@ function prepareQuoteRequest() {
                     aria-hidden="true"
                   />
                 </span>
-                {{ treatment }}
+                {{ treatment.label }}
               </label>
             </div>
             <p class="field-help">
@@ -428,11 +456,17 @@ function prepareQuoteRequest() {
               >Nombre</label>
               <input
                 id="quote-name"
-                v-model.trim="form.name"
+                v-model="form.name"
                 autocomplete="name"
-                required
                 placeholder="Tu nombre"
               >
+              <p
+                v-if="fieldErrors.nombre"
+                class="field-error"
+                role="alert"
+              >
+                {{ fieldErrors.nombre }}
+              </p>
             </div>
             <div>
               <label
@@ -441,24 +475,68 @@ function prepareQuoteRequest() {
               >Teléfono o WhatsApp</label>
               <input
                 id="quote-contact"
-                v-model.trim="form.contact"
+                v-model="form.contact"
                 type="tel"
                 autocomplete="tel"
-                required
-                placeholder="Tu número de contacto"
+                placeholder="10 dígitos"
               >
+              <p
+                v-if="fieldErrors.telefono"
+                class="field-error"
+                role="alert"
+              >
+                {{ fieldErrors.telefono }}
+              </p>
             </div>
+            <div>
+              <label
+                class="quote-field-label"
+                for="quote-email"
+              >Correo (opcional)</label>
+              <input
+                id="quote-email"
+                v-model="form.email"
+                type="email"
+                autocomplete="email"
+                placeholder="tucorreo@ejemplo.com"
+              >
+              <p
+                v-if="fieldErrors.correo"
+                class="field-error"
+                role="alert"
+              >
+                {{ fieldErrors.correo }}
+              </p>
+            </div>
+          </div>
+          <div
+            class="hp-field"
+            aria-hidden="true"
+          >
+            <label for="quote-trap">No llenar este campo</label>
+            <input
+              id="quote-trap"
+              v-model="form.trap"
+              name="sitioWeb"
+              tabindex="-1"
+              autocomplete="off"
+            >
           </div>
 
           <details class="privacy-details">
             <summary>Aviso de privacidad</summary>
-            <p>Los datos que proporciones y el nombre de cualquier archivo se incluirán en un mensaje dirigido a Clínica Óptica por WhatsApp. El archivo de receta no se adjunta automáticamente: deberás agregarlo en el chat. La solicitud solo se comparte cuando tú pulsas Enviar en WhatsApp.</p>
+            <p>
+              Los datos que proporciones se guardan para atender tu solicitud. Si adjuntas tu receta, solo la consulta el personal autorizado.
+              <NuxtLink
+                to="/privacidad"
+                target="_blank"
+              >Aviso de privacidad completo</NuxtLink>.
+            </p>
           </details>
           <label class="privacy-consent">
             <input
               v-model="form.privacyAccepted"
               type="checkbox"
-              required
             >
             <span class="custom-checkbox">
               <UIcon
@@ -466,14 +544,30 @@ function prepareQuoteRequest() {
                 aria-hidden="true"
               />
             </span>
-            Acepto compartir estos datos con Clínica Óptica por WhatsApp para atender mi solicitud.
+            Acepto el aviso de privacidad y que Clínica Óptica use mis datos para atender mi solicitud.
           </label>
+          <p
+            v-if="fieldErrors.aceptaPrivacidad"
+            class="field-error"
+            role="alert"
+          >
+            {{ fieldErrors.aceptaPrivacidad }}
+          </p>
+          <p
+            v-if="error"
+            class="form-error"
+            role="alert"
+          >
+            {{ error }}
+          </p>
 
           <button
+            v-if="!sent"
             class="quote-submit"
             type="submit"
+            :disabled="pending"
           >
-            Preparar solicitud de cotización
+            {{ pending ? 'Enviando…' : 'Solicitar cotización' }}
             <UIcon
               name="i-lucide-arrow-up-right"
               aria-hidden="true"
@@ -481,7 +575,7 @@ function prepareQuoteRequest() {
           </button>
 
           <div
-            v-if="preparedUrl"
+            v-if="sent"
             class="quote-prepared"
             role="status"
           >
@@ -492,14 +586,14 @@ function prepareQuoteRequest() {
               />
             </span>
             <div>
-              <strong>Tu solicitud está lista para compartir; todavía no se ha enviado.</strong>
-              <p>Revisa el mensaje en WhatsApp, adjunta allí tu receta si corresponde y pulsa Enviar. Solo después de que el equipo reciba la solicitud podrá confirmar su recepción y revisar compatibilidad, disponibilidad y condiciones.</p>
+              <strong>¡Recibimos tu solicitud de cotización!</strong>
+              <p>El equipo revisará compatibilidad, disponibilidad y condiciones, y te contactará. Si quieres, también puedes continuar por WhatsApp.</p>
               <a
                 :href="preparedUrl"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Continuar a WhatsApp
+                Continuar por WhatsApp
                 <UIcon
                   name="i-lucide-arrow-up-right"
                   aria-hidden="true"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import type { InformacionInput } from '#shared/schemas/informacion'
 
 const { url: waUrl } = useWhatsapp()
 
@@ -14,31 +15,42 @@ useHead({
 })
 
 const topics = [
-  'Precios',
-  'Lentes de contacto',
-  'Convenios',
-  'Formas de pago',
-  'Otra consulta'
-]
+  { value: 'precios', label: 'Precios' },
+  { value: 'servicios', label: 'Servicios' },
+  { value: 'convenios', label: 'Convenios' },
+  { value: 'pagos', label: 'Formas de pago' },
+  { value: 'otra', label: 'Otra consulta' }
+] as const
 
-const form = reactive({
-  topic: '',
-  question: '',
-  name: '',
-  contact: ''
+const vacio = () => ({
+  tema: '',
+  pregunta: '',
+  nombre: '',
+  telefono: '',
+  correo: '',
+  aceptaPrivacidad: false,
+  sitioWeb: ''
 })
-const preparedUrl = ref('')
 
-function prepareInformationRequest() {
-  const message = [
-    'Tipo de solicitud: Información',
-    `Tema: ${form.topic}`,
-    `Pregunta: ${form.question.trim()}`,
-    `Nombre: ${form.name.trim()}`,
-    `Contacto: ${form.contact.trim()}`
-  ].join('\n')
+const form = reactive(vacio())
+const enviado = ref(false)
+const mensajeWhatsapp = ref('')
 
-  preparedUrl.value = waUrl(message)
+const { crearInformacion } = useSolicitudes()
+const { pending, error, fieldErrors, submit } = useSubmit(crearInformacion)
+
+async function onSubmit() {
+  const temaLabel = topics.find(t => t.value === form.tema)?.label ?? ''
+  const ref = await submit({ ...form } as InformacionInput)
+  if (!ref) return // falló: se conserva lo que escribió
+
+  mensajeWhatsapp.value = waUrl([
+    'Hola, acabo de enviar una solicitud de información desde la página.',
+    `Tema: ${temaLabel}`,
+    `Referencia: ${ref}`
+  ].join('\n'))
+  Object.assign(form, vacio())
+  enviado.value = true
 }
 </script>
 
@@ -64,8 +76,8 @@ function prepareInformationRequest() {
     >
       <form
         class="request-form"
-        @input="preparedUrl = ''"
-        @submit.prevent="prepareInformationRequest"
+        novalidate
+        @submit.prevent="onSubmit"
       >
         <div class="request-form-heading">
           <span class="request-form-icon">
@@ -84,78 +96,8 @@ function prepareInformationRequest() {
           </div>
         </div>
 
-        <label for="information-topic">Tema</label>
-        <select
-          id="information-topic"
-          v-model="form.topic"
-          name="topic"
-          required
-        >
-          <option
-            disabled
-            value=""
-          >
-            Selecciona un tema
-          </option>
-          <option
-            v-for="topic in topics"
-            :key="topic"
-            :value="topic"
-          >
-            {{ topic }}
-          </option>
-        </select>
-
-        <label for="information-question">Tu pregunta</label>
-        <textarea
-          id="information-question"
-          v-model.trim="form.question"
-          name="question"
-          rows="4"
-          maxlength="1000"
-          placeholder="Escribe aquí tu duda"
-          required
-        />
-
-        <div class="request-field-pair">
-          <div>
-            <label for="information-name">Nombre</label>
-            <input
-              id="information-name"
-              v-model.trim="form.name"
-              autocomplete="name"
-              name="name"
-              placeholder="Tu nombre"
-              required
-            >
-          </div>
-          <div>
-            <label for="information-contact">Teléfono o WhatsApp</label>
-            <input
-              id="information-contact"
-              v-model.trim="form.contact"
-              autocomplete="tel"
-              name="contact"
-              type="tel"
-              placeholder="Tu número de contacto"
-              required
-            >
-          </div>
-        </div>
-
-        <button
-          class="request-primary-button"
-          type="submit"
-        >
-          Preparar solicitud
-          <UIcon
-            name="i-lucide-arrow-right"
-            aria-hidden="true"
-          />
-        </button>
-
         <div
-          v-if="preparedUrl"
+          v-if="enviado"
           class="request-prepared"
           role="status"
         >
@@ -164,27 +106,180 @@ function prepareInformationRequest() {
             aria-hidden="true"
           />
           <div>
-            <strong>Tu solicitud está preparada.</strong>
-            <p>Ábrela en WhatsApp y pulsa Enviar para que el equipo la reciba.</p>
+            <strong>¡Recibimos tu solicitud!</strong>
+            <p>El equipo te responderá pronto. Si quieres, también puedes continuar por WhatsApp.</p>
             <a
-              :href="preparedUrl"
+              :href="mensajeWhatsapp"
               target="_blank"
               rel="noopener noreferrer"
             >
-              Abrir WhatsApp
+              Continuar por WhatsApp
               <UIcon
                 name="i-lucide-arrow-up-right"
                 aria-hidden="true"
               />
             </a>
+            <button
+              type="button"
+              class="request-link-button"
+              @click="enviado = false"
+            >
+              Enviar otra consulta
+            </button>
           </div>
         </div>
-        <p
-          v-else
-          class="request-form-note"
-        >
-          La solicitud solo se enviará cuando confirmes el mensaje dentro de WhatsApp.
-        </p>
+
+        <template v-else>
+          <label for="information-topic">Tema</label>
+          <select
+            id="information-topic"
+            v-model="form.tema"
+            name="tema"
+          >
+            <option
+              disabled
+              value=""
+            >
+              Selecciona un tema
+            </option>
+            <option
+              v-for="topic in topics"
+              :key="topic.value"
+              :value="topic.value"
+            >
+              {{ topic.label }}
+            </option>
+          </select>
+          <p
+            v-if="fieldErrors.tema"
+            class="field-error"
+          >
+            {{ fieldErrors.tema }}
+          </p>
+
+          <label for="information-question">Tu pregunta</label>
+          <textarea
+            id="information-question"
+            v-model="form.pregunta"
+            name="pregunta"
+            rows="4"
+            maxlength="1000"
+            placeholder="Escribe aquí tu duda"
+          />
+          <p
+            v-if="fieldErrors.pregunta"
+            class="field-error"
+          >
+            {{ fieldErrors.pregunta }}
+          </p>
+
+          <div class="request-field-pair">
+            <div>
+              <label for="information-name">Nombre</label>
+              <input
+                id="information-name"
+                v-model="form.nombre"
+                autocomplete="name"
+                name="nombre"
+                placeholder="Tu nombre"
+              >
+              <p
+                v-if="fieldErrors.nombre"
+                class="field-error"
+              >
+                {{ fieldErrors.nombre }}
+              </p>
+            </div>
+            <div>
+              <label for="information-contact">Teléfono o WhatsApp</label>
+              <input
+                id="information-contact"
+                v-model="form.telefono"
+                autocomplete="tel"
+                name="telefono"
+                type="tel"
+                inputmode="tel"
+                placeholder="10 dígitos"
+              >
+              <p
+                v-if="fieldErrors.telefono"
+                class="field-error"
+              >
+                {{ fieldErrors.telefono }}
+              </p>
+            </div>
+          </div>
+
+          <label for="information-email">Correo (opcional)</label>
+          <input
+            id="information-email"
+            v-model="form.correo"
+            autocomplete="email"
+            name="correo"
+            type="email"
+            placeholder="tucorreo@ejemplo.com"
+          >
+          <p
+            v-if="fieldErrors.correo"
+            class="field-error"
+          >
+            {{ fieldErrors.correo }}
+          </p>
+
+          <div
+            class="hp-field"
+            aria-hidden="true"
+          >
+            <label for="information-sitio">No llenar este campo</label>
+            <input
+              id="information-sitio"
+              v-model="form.sitioWeb"
+              name="sitioWeb"
+              tabindex="-1"
+              autocomplete="off"
+            >
+          </div>
+
+          <label class="form-privacy">
+            <input
+              v-model="form.aceptaPrivacidad"
+              type="checkbox"
+              name="aceptaPrivacidad"
+            >
+            <span>
+              Acepto el <NuxtLink
+                to="/privacidad"
+                target="_blank"
+              >aviso de privacidad</NuxtLink>.
+            </span>
+          </label>
+          <p
+            v-if="fieldErrors.aceptaPrivacidad"
+            class="field-error"
+          >
+            {{ fieldErrors.aceptaPrivacidad }}
+          </p>
+
+          <p
+            v-if="error"
+            class="form-error"
+            role="alert"
+          >
+            {{ error }}
+          </p>
+
+          <button
+            class="request-primary-button"
+            type="submit"
+            :disabled="pending"
+          >
+            {{ pending ? 'Enviando…' : 'Enviar solicitud' }}
+            <UIcon
+              name="i-lucide-arrow-right"
+              aria-hidden="true"
+            />
+          </button>
+        </template>
       </form>
 
       <aside class="request-aside">
@@ -202,13 +297,13 @@ function prepareInformationRequest() {
           <ul>
             <li
               v-for="topic in topics"
-              :key="topic"
+              :key="topic.value"
             >
               <UIcon
                 name="i-lucide-check"
                 aria-hidden="true"
               />
-              {{ topic }}
+              {{ topic.label }}
             </li>
           </ul>
         </div>

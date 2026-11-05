@@ -1,17 +1,13 @@
 import { informacionSchema } from '#shared/schemas/informacion'
 
 // POST /api/solicitudes/informacion
-export default defineEventHandler(async (event) => {
-  const { nombre, telefono, correo, tema, pregunta } = await leerValidado(event, informacionSchema)
-
-  const ref = crearSolicitud({
-    tipo: 'informacion',
-    nombre,
-    telefono,
-    correo,
-    datos: { tema, pregunta }
+export default defineEventHandler(event => recibirSolicitud(event, {
+  tipo: 'informacion',
+  esquema: informacionSchema,
+  mapear: v => ({
+    nombre: v.nombre,
+    telefono: v.telefono,
+    correo: v.correo,
+    datos: { tema: v.tema, pregunta: v.pregunta }
   })
-
-  setResponseStatus(event, 201)
-  return { ref }
-})
+}))

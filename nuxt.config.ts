@@ -24,6 +24,12 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     dbPath: './data/clinica.db',
+    smtpHost: '',
+    smtpPort: '587',
+    smtpUser: '',
+    smtpPass: '',
+    correoDe: '',
+    correoAvisos: '',
     public: {
       apiBase: '/api',
       whatsappNumber: '529211371704'
