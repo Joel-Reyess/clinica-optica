@@ -39,6 +39,16 @@ const edicion = reactive({ estado: 'nueva', resultado: '', responsable: '', nota
 const guardando = ref(false)
 const mensaje = ref('')
 
+const metricas = ref<Array<{ evento: string, n: number }>>([])
+const NOMBRES: Record<string, string> = {
+  cta_cita: 'Clics en Citas',
+  cta_cotizacion: 'Clics en Cotizar',
+  cta_empresas: 'Clics en Empresas',
+  cta_informacion: 'Clics en Información',
+  whatsapp: 'Clics en WhatsApp',
+  telefono: 'Clics en Teléfono'
+}
+
 const paginas = computed(() => Math.max(1, Math.ceil(lista.value.total / lista.value.porPagina)))
 
 async function cargar() {
@@ -95,12 +105,31 @@ const fecha = (v: string) => new Date(`${v.replace(' ', 'T')}Z`).toLocaleString(
   timeStyle: 'short'
 })
 
-onMounted(cargar)
+onMounted(async () => {
+  cargar()
+  metricas.value = await api<Array<{ evento: string, n: number }>>('/metricas').catch(() => [])
+})
 </script>
 
 <template>
   <AdminShell>
     <h1>Solicitudes</h1>
+
+    <ul
+      v-if="metricas.length"
+      class="metricas"
+      aria-label="Clics de los últimos 30 días"
+    >
+      <li
+        v-for="m in metricas"
+        :key="m.evento"
+      >
+        <strong>{{ m.n }}</strong> {{ NOMBRES[m.evento] ?? m.evento }}
+      </li>
+      <li class="nota">
+        últimos 30 días
+      </li>
+    </ul>
 
     <form
       class="filtros"
@@ -297,6 +326,27 @@ onMounted(cargar)
 </template>
 
 <style scoped>
+.metricas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.metricas li {
+  padding: 6px 12px;
+  border-radius: 99px;
+  background: #fff;
+  font-size: 0.88rem;
+}
+
+.metricas .nota {
+  background: none;
+  color: #66758a;
+}
+
 h1 {
   margin: 0 0 16px;
   font-size: 1.6rem;

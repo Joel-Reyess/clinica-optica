@@ -2,6 +2,28 @@
 import { nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
 
 const route = useRoute()
+const { public: { siteUrl } } = useRuntimeConfig()
+
+// SEO común: cada página pone su propio título y descripción con useHead.
+useHead({
+  titleTemplate: t => t || 'Clínica Óptica | Coatzacoalcos',
+  link: [{ rel: 'canonical', href: computed(() => `${siteUrl}${route.path === '/' ? '' : route.path}`) }],
+  script: [{
+    type: 'application/ld+json',
+    innerHTML: JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Optician',
+      'name': 'Clínica Óptica',
+      'url': siteUrl,
+      'areaServed': 'Coatzacoalcos, Veracruz'
+    })
+  }]
+})
+useSeoMeta({
+  ogSiteName: 'Clínica Óptica',
+  ogType: 'website',
+  ogLocale: 'es_MX'
+})
 const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 let revealObserver: IntersectionObserver | undefined
 

@@ -97,6 +97,16 @@ const MIGRACIONES: string[] = [
     valor TEXT NOT NULL,
     actualizado_en TEXT NOT NULL DEFAULT (datetime('now'))
   );
+  `,
+  // 4: medición de clics (sin datos personales: solo qué botón y en qué página)
+  `
+  CREATE TABLE eventos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    evento TEXT NOT NULL,
+    ruta TEXT NOT NULL,
+    creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX idx_eventos ON eventos (evento, creado_en);
   `
 ]
 

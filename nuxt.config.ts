@@ -34,13 +34,13 @@ export default defineNuxtConfig({
     correoDe: '',
     correoAvisos: '',
     public: {
+      siteUrl: 'http://localhost:3000',
       apiBase: '/api',
       whatsappNumber: '529211371704'
     }
   },
 
   routeRules: {
-    '/': { prerender: true },
     '/servicios': { redirect: '/lentes' },
     '/images/**': {
       headers: {
