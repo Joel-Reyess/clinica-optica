@@ -11,7 +11,7 @@ pnpm dev                  # http://localhost:3000
 ```
 
 Comandos útiles: `pnpm lint`, `pnpm typecheck`, `pnpm build`.
-Requiere Node 22+ y pnpm (`corepack enable`).
+Requiere Node 22.13+ (usa el SQLite incluido en Node) y pnpm (`corepack enable`).
 
 ## Cómo está organizado
 

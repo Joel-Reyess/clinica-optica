@@ -13,7 +13,7 @@ const POR_PAGINA = 25
 export default defineEventHandler((event) => {
   const { tipo, estado, q, pagina } = consulta.parse(getQuery(event))
   const donde: string[] = []
-  const params: Record<string, unknown> = {}
+  const params: Record<string, string> = {}
   if (tipo) {
     donde.push('s.tipo = @tipo')
     params.tipo = tipo

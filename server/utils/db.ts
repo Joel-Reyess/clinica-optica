@@ -1,6 +1,7 @@
 import { mkdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
-import Database from 'better-sqlite3'
+// SQLite viene incluido en Node (22.13+): no hay nada que compilar ni instalar.
+import { DatabaseSync } from 'node:sqlite'
 
 // Migraciones: cada elemento se aplica UNA vez, en orden. Para cambiar la base,
 // NO edites una anterior: agrega una nueva al final. La versión aplicada se guarda
@@ -110,7 +111,7 @@ const MIGRACIONES: string[] = [
   `
 ]
 
-let db: Database.Database | undefined
+let db: DatabaseSync | undefined
 
 export function useDb() {
   if (db) return db
@@ -119,16 +120,21 @@ export function useDb() {
   const archivo = resolve(dbPath)
   mkdirSync(dirname(archivo), { recursive: true })
 
-  const conexion = new Database(archivo)
-  conexion.pragma('journal_mode = WAL') // lecturas y escrituras no se estorban
-  conexion.pragma('foreign_keys = ON')
+  const conexion = new DatabaseSync(archivo)
+  conexion.exec('PRAGMA journal_mode = WAL') // lecturas y escrituras no se estorban
+  conexion.exec('PRAGMA foreign_keys = ON')
 
-  const aplicada = conexion.pragma('user_version', { simple: true }) as number
+  const { user_version: aplicada } = conexion.prepare('PRAGMA user_version').get() as { user_version: number }
   for (let v = aplicada; v < MIGRACIONES.length; v++) {
-    conexion.transaction(() => {
+    conexion.exec('BEGIN')
+    try {
       conexion.exec(MIGRACIONES[v]!)
-      conexion.pragma(`user_version = ${v + 1}`)
-    })()
+      conexion.exec(`PRAGMA user_version = ${v + 1}`)
+      conexion.exec('COMMIT')
+    } catch (e) {
+      conexion.exec('ROLLBACK')
+      throw e
+    }
   }
 
   db = conexion
