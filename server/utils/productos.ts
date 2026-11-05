@@ -22,7 +22,7 @@ interface FilaImagen {
 export function listarProductos(soloVisibles: boolean, categoria?: string) {
   const db = useDb()
   const donde: string[] = []
-  const params: unknown[] = []
+  const params: string[] = []
   if (soloVisibles) donde.push('visible = 1')
   if (categoria) {
     donde.push('categoria = ?')
@@ -30,8 +30,8 @@ export function listarProductos(soloVisibles: boolean, categoria?: string) {
   }
   const filtro = donde.length ? `WHERE ${donde.join(' AND ')}` : ''
 
-  const productos = db.prepare(`SELECT * FROM productos ${filtro} ORDER BY orden, id`).all(...params) as FilaProducto[]
-  const imagenes = db.prepare('SELECT id, producto_id, nombre_guardado, texto_alternativo FROM producto_imagenes ORDER BY orden, id').all() as FilaImagen[]
+  const productos = db.prepare(`SELECT * FROM productos ${filtro} ORDER BY orden, id`).all(...params) as unknown as FilaProducto[]
+  const imagenes = db.prepare('SELECT id, producto_id, nombre_guardado, texto_alternativo FROM producto_imagenes ORDER BY orden, id').all() as unknown as FilaImagen[]
 
   return productos.map(p => ({
     id: p.id,
