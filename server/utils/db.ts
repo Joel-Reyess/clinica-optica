@@ -25,6 +25,78 @@ const MIGRACIONES: string[] = [
     actualizada_en TEXT NOT NULL DEFAULT (datetime('now'))
   );
   CREATE INDEX idx_solicitudes_tipo_estado ON solicitudes (tipo, estado, creada_en);
+  `,
+  // 2: recetas privadas, personal del panel y sesiones
+  `
+  CREATE TABLE archivos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    solicitud_id INTEGER NOT NULL REFERENCES solicitudes(id) ON DELETE CASCADE,
+    nombre_original TEXT NOT NULL,
+    nombre_guardado TEXT NOT NULL UNIQUE,
+    tipo_mime TEXT NOT NULL,
+    bytes INTEGER NOT NULL,
+    creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE UNIQUE INDEX idx_archivos_solicitud ON archivos (solicitud_id);
+
+  CREATE TABLE usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario TEXT NOT NULL UNIQUE,
+    clave_hash TEXT NOT NULL,
+    nombre TEXT NOT NULL,
+    rol TEXT NOT NULL DEFAULT 'personal' CHECK (rol IN ('admin', 'personal')),
+    activo INTEGER NOT NULL DEFAULT 1,
+    creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE sesiones (
+    token_hash TEXT PRIMARY KEY,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    expira_en TEXT NOT NULL,
+    creada_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX idx_sesiones_expira ON sesiones (expira_en);
+
+  CREATE TABLE login_intentos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario TEXT NOT NULL,
+    ip TEXT NOT NULL,
+    exitoso INTEGER NOT NULL,
+    creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX idx_login_intentos ON login_intentos (usuario, creado_en);
+  `,
+  // 3: catálogo y textos editables
+  `
+  CREATE TABLE productos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    categoria TEXT NOT NULL CHECK (categoria IN ('clasicos', 'modernos', 'seguridad-graduada')),
+    nombre TEXT NOT NULL,
+    codigo TEXT,
+    descripcion TEXT,
+    colores TEXT NOT NULL DEFAULT '[]',
+    precio_desde TEXT,
+    promocion TEXT,
+    visible INTEGER NOT NULL DEFAULT 1,
+    orden INTEGER NOT NULL DEFAULT 0,
+    creado_en TEXT NOT NULL DEFAULT (datetime('now')),
+    actualizado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
+  CREATE TABLE producto_imagenes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    producto_id INTEGER NOT NULL REFERENCES productos(id) ON DELETE CASCADE,
+    nombre_guardado TEXT NOT NULL UNIQUE,
+    texto_alternativo TEXT,
+    orden INTEGER NOT NULL DEFAULT 0
+  );
+
+  CREATE TABLE bloques_texto (
+    clave TEXT PRIMARY KEY,
+    titulo TEXT NOT NULL,
+    valor TEXT NOT NULL,
+    actualizado_en TEXT NOT NULL DEFAULT (datetime('now'))
+  );
   `
 ]
 

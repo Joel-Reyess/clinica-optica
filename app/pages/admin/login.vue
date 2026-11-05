@@ -19,9 +19,27 @@ useHead({
 
 const passwordVisible = ref(false)
 const loginMessage = ref('')
+const usuario = ref('')
+const clave = ref('')
+const pending = ref(false)
 
-function submitLogin() {
-  loginMessage.value = 'El acceso aún no está habilitado: esta pantalla es solo visual.'
+async function submitLogin() {
+  if (pending.value) return
+  pending.value = true
+  loginMessage.value = ''
+  try {
+    await $fetch('/api/admin/login', { method: 'POST', body: { usuario: usuario.value, clave: clave.value } })
+    clave.value = ''
+    await navigateTo('/admin')
+  } catch (e) {
+    loginMessage.value = parseApiError(e).message
+    const status = (e as { statusCode?: number }).statusCode
+    if (status === 401 || status === 429) {
+      loginMessage.value = (e as { data?: { message?: string } }).data?.message ?? loginMessage.value
+    }
+  } finally {
+    pending.value = false
+  }
 }
 </script>
 
@@ -118,18 +136,19 @@ function submitLogin() {
           class="login-form"
           @submit.prevent="submitLogin"
         >
-          <label for="admin-email">Correo electrónico</label>
+          <label for="admin-email">Usuario</label>
           <div class="login-input-wrap">
             <UIcon
-              name="i-lucide-mail"
+              name="i-lucide-user-round"
               aria-hidden="true"
             />
             <input
               id="admin-email"
-              type="email"
-              name="email"
+              v-model="usuario"
+              type="text"
+              name="usuario"
               autocomplete="username"
-              placeholder="admin@clinicaoptica.com"
+              placeholder="Tu usuario"
               required
             >
           </div>
@@ -144,6 +163,7 @@ function submitLogin() {
             />
             <input
               id="admin-password"
+              v-model="clave"
               :type="passwordVisible ? 'text' : 'password'"
               name="password"
               autocomplete="current-password"
@@ -179,8 +199,9 @@ function submitLogin() {
           <button
             class="login-submit"
             type="submit"
+            :disabled="pending"
           >
-            Iniciar sesión
+            {{ pending ? 'Entrando…' : 'Iniciar sesión' }}
             <UIcon
               name="i-lucide-arrow-right"
               aria-hidden="true"

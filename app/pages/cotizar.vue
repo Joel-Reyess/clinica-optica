@@ -22,7 +22,8 @@ useHead({
 const route = useRoute()
 const sharedPrescription = getPrescriptionDraft()
 const { url: waUrl } = useWhatsapp()
-const { crearCotizacion } = useSolicitudes()
+const { crearCotizacion, subirReceta } = useSolicitudes()
+const recetaFallo = ref('')
 const { pending, error, fieldErrors, submit } = useSubmit(crearCotizacion)
 const contactOptions = [
   { value: 'armazon-con-micas', label: 'Armazón con micas graduadas' },
@@ -151,6 +152,18 @@ async function sendQuoteRequest() {
     sitioWeb: form.trap
   })
   if (!ref) return // falló: el formulario conserva lo que escribió
+
+  // La solicitud ya quedó guardada. Si hay receta, se sube aparte; si esa subida
+  // falla, avisamos sin perder la solicitud.
+  recetaFallo.value = ''
+  if (needsPrescription.value && prescription.value) {
+    try {
+      await subirReceta(ref, prescription.value)
+      setPrescriptionDraft(null)
+    } catch {
+      recetaFallo.value = 'Recibimos tu solicitud, pero no pudimos subir la receta. Envíala por WhatsApp y la agregamos.'
+    }
+  }
 
   preparedUrl.value = waUrl([
     'Hola, acabo de enviar una solicitud de cotización desde la página.',
@@ -588,6 +601,20 @@ async function sendQuoteRequest() {
             <div>
               <strong>¡Recibimos tu solicitud de cotización!</strong>
               <p>El equipo revisará compatibilidad, disponibilidad y condiciones, y te contactará. Si quieres, también puedes continuar por WhatsApp.</p>
+              <p
+                v-if="recetaFallo"
+                class="field-error"
+                role="alert"
+              >
+                {{ recetaFallo }}
+              </p>
+              <p
+                v-if="recetaFallo"
+                class="field-error"
+                role="alert"
+              >
+                {{ recetaFallo }}
+              </p>
               <a
                 :href="preparedUrl"
                 target="_blank"

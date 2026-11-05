@@ -24,6 +24,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     dbPath: './data/clinica.db',
+    uploadsDir: './data/uploads',
+    adminUser: '',
+    adminPassword: '',
     smtpHost: '',
     smtpPort: '587',
     smtpUser: '',

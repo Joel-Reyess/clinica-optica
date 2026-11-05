@@ -14,7 +14,15 @@ export function useSolicitudes() {
     return res.ref
   }
 
+  // Sube la receta (foto o PDF) de una cotización ya creada.
+  async function subirReceta(ref: string, archivo: File) {
+    const datos = new FormData()
+    datos.append('receta', archivo)
+    await api(`/solicitudes/${encodeURIComponent(ref)}/receta`, { method: 'POST', body: datos })
+  }
+
   return {
+    subirReceta,
     crearInformacion: (i: InformacionInput) => enviar('/solicitudes/informacion', i),
     crearEmpresa: (i: EmpresaInput) => enviar('/solicitudes/empresa', i),
     crearCita: (i: CitaInput) => enviar('/solicitudes/cita', i),
