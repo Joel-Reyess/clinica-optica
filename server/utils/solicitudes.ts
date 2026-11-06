@@ -14,7 +14,7 @@ interface NuevaSolicitud {
 // Las rutas no tocan SQL; llaman a funciones como esta.
 export function crearSolicitud(s: NuevaSolicitud): string {
   // Identificador público: no se puede adivinar contando 1, 2, 3...
-  const ref = randomBytes(6).toString('base64url')
+  const ref = randomBytes(9).toString('base64url')
 
   useDb()
     .prepare(`

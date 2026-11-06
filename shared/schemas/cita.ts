@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { aceptaPrivacidad, correoOpcional, nombre, telefono, trampa } from './comun'
+import { aceptaPrivacidad, correoOpcional, lineaOpcional, nombre, nombrePersona, telefono, trampa } from './comun'
 
 export const SERVICIOS_CITA = [
   'examen-vista',
@@ -24,19 +24,18 @@ export const citaSchema = z.object({
   tipoPaciente: z.enum(TIPOS_PACIENTE, 'Indica si eres paciente nuevo'),
   fecha: z.iso.date('Elige un día'),
   hora: z.string('Elige una hora').regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Elige una hora válida'),
-  convenio: z.string().trim().max(120).optional(),
+  convenio: lineaOpcional(120),
   esMenor: z.boolean().optional(),
-  responsableNombre: z.string().trim().max(120).optional(),
-  responsableTelefono: z.string().optional(),
+  responsableNombre: z.union([z.literal(''), nombrePersona('Escribe el nombre del responsable')]).optional(),
+  responsableTelefono: z.string().max(40).optional(),
   aceptaPrivacidad,
   sitioWeb: trampa
 }).superRefine((v, ctx) => {
   if (v.fecha) {
     if (v.fecha < hoyMexico()) {
       ctx.addIssue({ code: 'custom', path: ['fecha'], message: 'Elige un día que no haya pasado' })
-    } else if (new Date(`${v.fecha}T12:00:00Z`).getUTCDay() === 0) {
-      ctx.addIssue({ code: 'custom', path: ['fecha'], message: 'No damos citas los domingos' })
     }
+    // Qué días se atienden lo decide la clínica en el panel (horarios de citas)
   }
   if (v.esMenor) {
     if (!v.responsableNombre || v.responsableNombre.length < 2) {

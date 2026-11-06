@@ -39,8 +39,11 @@ const form = reactive({
   orden: 0
 })
 
+const marcas = ref<Array<{ id: number, nombre: string }>>([])
+
 async function cargar() {
   productos.value = await api<Producto[]>('/productos')
+  marcas.value = await api<Array<{ id: number, nombre: string }>>('/marcas')
 }
 
 function nuevo() {
@@ -116,8 +119,6 @@ async function quitarImagen(id: number) {
   await cargar()
 }
 
-const marcas = computed(() => [...new Set(productos.value.map(p => p.marca).filter((m): m is string => Boolean(m)))].sort())
-
 const actual = computed(() => productos.value.find(p => p.id === editando.value))
 
 onMounted(cargar)
@@ -178,19 +179,21 @@ onMounted(cargar)
           </select>
         </label>
         <label>Marca
-          <input
-            v-model="form.marca"
-            list="marcas-existentes"
-            maxlength="60"
-            placeholder="Ej. Ray-Ban"
-          >
-          <datalist id="marcas-existentes">
+          <select v-model="form.marca">
+            <option value="">
+              Sin marca
+            </option>
             <option
               v-for="m in marcas"
-              :key="m"
-              :value="m"
-            />
-          </datalist>
+              :key="m.id"
+              :value="m.nombre"
+            >
+              {{ m.nombre }}
+            </option>
+          </select>
+          <small>
+            ¿No aparece? <NuxtLink to="/admin/marcas">Agrégala en Marcas</NuxtLink>.
+          </small>
         </label>
         <label>Nombre
           <input

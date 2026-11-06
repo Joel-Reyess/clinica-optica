@@ -4,8 +4,10 @@ const route = useRoute()
 const enlaces = [
   { to: '/admin', label: 'Solicitudes', icon: 'i-lucide-inbox' },
   { to: '/admin?tipo=cita', label: 'Citas', icon: 'i-lucide-calendar-days' },
+  { to: '/admin/horarios', label: 'Horarios de citas', icon: 'i-lucide-clock-3' },
   { to: '/admin/convenios', label: 'Convenios', icon: 'i-lucide-handshake' },
   { to: '/admin/catalogo', label: 'Catálogo', icon: 'i-lucide-glasses' },
+  { to: '/admin/marcas', label: 'Marcas', icon: 'i-lucide-tag' },
   { to: '/admin/textos', label: 'Textos y horarios', icon: 'i-lucide-type' }
 ]
 

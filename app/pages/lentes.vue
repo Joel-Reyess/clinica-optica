@@ -376,14 +376,10 @@ const selectedBrand = computed(() => {
   return typeof marca === 'string' && marca ? marca : ''
 })
 
-// Marcas que existen en el catálogo, con cuántos modelos tiene cada una
-const brands = computed(() => {
-  const conteo = new Map<string, number>()
-  for (const p of products.value) {
-    if (p.brand) conteo.set(p.brand, (conteo.get(p.brand) ?? 0) + 1)
-  }
-  return [...conteo.entries()].sort((a, b) => a[0].localeCompare(b[0], 'es')).map(([name, count]) => ({ name, count }))
-})
+// Marcas que tienen al menos un modelo visible
+const brands = computed(() => [...new Set(products.value.map(p => p.brand).filter(Boolean))]
+  .sort((a, b) => a.localeCompare(b, 'es'))
+  .map(name => ({ name })))
 
 const categoryLabel = (slug: string) => categories.find(c => c.slug === slug)?.category ?? ''
 
@@ -761,7 +757,7 @@ const steps = [
             :class="{ active: selectedBrand === b.name }"
             :to="filterLink(selectedCategory?.slug, b.name)"
           >
-            {{ b.name }} <small>{{ b.count }}</small>
+            {{ b.name }}
           </NuxtLink>
         </div>
       </div>

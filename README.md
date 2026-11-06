@@ -73,3 +73,16 @@ Detrás de Traefik/Nginx se usa `X-Forwarded-For` para la IP real (límites y bl
 ## Fase 2 (no incluida)
 
 Membresía/Club, seguimiento de pedidos, agenda real con disponibilidad y asistente.
+
+
+## Horarios de citas
+
+- En el panel (**Horarios de citas**) se define, por día de la semana, si se atiende, hora de apertura/cierre y una pausa opcional; además duración de cada cita, citas por horario, anticipación mínima y cuántos días hacia adelante se puede reservar. También se pueden cerrar días concretos (festivos, vacaciones).
+- La página de citas (`GET /api/citas/disponibilidad`) solo muestra días y horas libres. El servidor vuelve a validar el horario al recibir la cita (`verificar` en `recibirSolicitud`), así que no se puede reservar un horario ocupado ni inventado.
+- Una cita ocupa su horario hasta que se marca como `cerrada` en el panel.
+- `TODO(cliente)`: el horario inicial (lun–vie 9–18, sáb 9–14, domingo cerrado) es provisional; ajustarlo en el panel.
+
+## Marcas y seguridad de entradas
+
+- Las marcas se administran en **Marcas** y se eligen con un select al crear productos (evita duplicados mal escritos).
+- Todo texto que entra se limpia (sin etiquetas, `<>` ni caracteres de control; nombres solo con letras) tanto en el formulario como en el servidor. El panel identifica solicitudes por una referencia aleatoria, nunca por su número interno.

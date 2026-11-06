@@ -50,7 +50,7 @@ export function avisarNuevaSolicitud(s: {
   t.sendMail({
     from: c.correoDe || c.smtpUser,
     to: c.correoAvisos,
-    subject: `Nueva solicitud de ${ETIQUETAS[s.tipo] ?? s.tipo}: ${s.nombre}`,
+    subject: `Nueva solicitud de ${ETIQUETAS[s.tipo] ?? s.tipo}: ${s.nombre}`.replace(/[\r\n]+/g, ' '),
     text: lineas.join('\n')
   }).catch((e) => {
     console.error('[correo] no se pudo enviar el aviso:', e instanceof Error ? e.message : e)

@@ -5,6 +5,16 @@ import { citaSchema } from '#shared/schemas/cita'
 export default defineEventHandler(event => recibirSolicitud(event, {
   tipo: 'cita',
   esquema: citaSchema,
+  verificar: (v) => {
+    if (!horarioLibre(v.fecha, v.hora)) {
+      throw createError({
+        statusCode: 422,
+        statusMessage: 'Unprocessable Entity',
+        message: 'Datos no válidos',
+        data: { errors: { hora: ['Ese horario ya no está disponible. Elige otro, por favor.'] } }
+      })
+    }
+  },
   mapear: v => ({
     nombre: v.nombre,
     telefono: v.telefono,

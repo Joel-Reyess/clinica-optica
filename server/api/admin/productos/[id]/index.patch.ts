@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   `).run({
     id,
     categoria: p.categoria,
-    marca: p.marca || null,
+    marca: resolverMarca(p.marca),
     nombre: p.nombre,
     codigo: p.codigo || null,
     descripcion: p.descripcion || null,

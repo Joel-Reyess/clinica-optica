@@ -35,7 +35,6 @@ export default defineNuxtConfig({
     correoAvisos: '',
     public: {
       siteUrl: 'http://localhost:3000',
-      apiBase: '/api',
       whatsappNumber: '529211371704'
     }
   },

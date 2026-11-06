@@ -8,6 +8,9 @@ interface Opciones<T> {
   tipo: TipoSolicitud
   esquema: ZodType<T>
   // Separa lo común (nombre, teléfono, correo) de lo específico de cada tipo.
+  // Comprobaciones extra con la base (por ejemplo, que el horario siga libre). Síncrona a propósito:
+  // así nadie se cuela entre la comprobación y el guardado.
+  verificar?: (v: T) => void
   mapear: (v: T) => { nombre: string, telefono: string, correo?: string, datos: Record<string, unknown> }
 }
 
@@ -27,10 +30,11 @@ export async function recibirSolicitud<T>(event: H3Event, o: Opciones<T>) {
   // para que no sepa que lo detectamos, pero no guardamos nada.
   if (cuerpo && typeof cuerpo === 'object' && (cuerpo as Record<string, unknown>).sitioWeb) {
     setResponseStatus(event, 201)
-    return { ref: randomBytes(6).toString('base64url') }
+    return { ref: randomBytes(9).toString('base64url') }
   }
 
   const valido = validarCuerpo(cuerpo, o.esquema)
+  o.verificar?.(valido)
   const { nombre, telefono, correo, datos } = o.mapear(valido)
   const ref = crearSolicitud({ tipo: o.tipo, nombre, telefono, correo, datos })
   avisarNuevaSolicitud({ ref, tipo: o.tipo, nombre, telefono, datos })

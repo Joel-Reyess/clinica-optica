@@ -31,7 +31,7 @@ export default defineEventHandler((event) => {
 
   const { total } = db.prepare(`SELECT COUNT(*) AS total FROM solicitudes s ${filtro}`).get(params) as { total: number }
   const filas = db.prepare(`
-    SELECT s.id, s.ref, s.tipo, s.nombre, s.telefono, s.estado, s.responsable, s.creada_en, s.datos,
+    SELECT s.ref, s.tipo, s.nombre, s.telefono, s.estado, s.responsable, s.creada_en, s.datos,
       EXISTS (SELECT 1 FROM archivos a WHERE a.solicitud_id = s.id) AS tiene_receta
     FROM solicitudes s ${filtro}
     ORDER BY s.creada_en DESC, s.id DESC

@@ -7,7 +7,6 @@ useHead({
 })
 
 interface Fila {
-  id: number
   ref: string
   tipo: string
   nombre: string
@@ -78,9 +77,9 @@ function filtrar() {
   cargar()
 }
 
-async function abrir(id: number) {
+async function abrir(ref: string) {
   mensaje.value = ''
-  detalle.value = await api<Detalle>(`/solicitudes/${id}`)
+  detalle.value = await api<Detalle>(`/solicitudes/${encodeURIComponent(ref)}`)
   edicion.estado = detalle.value.estado
   edicion.resultado = detalle.value.resultado ?? ''
   edicion.responsable = detalle.value.responsable ?? ''
@@ -92,7 +91,7 @@ async function guardar() {
   guardando.value = true
   mensaje.value = ''
   try {
-    await api(`/solicitudes/${detalle.value.id}`, { method: 'PATCH', body: { ...edicion } })
+    await api(`/solicitudes/${encodeURIComponent(detalle.value.ref)}`, { method: 'PATCH', body: { ...edicion } })
     mensaje.value = 'Guardado'
     await cargar()
     cargarNuevas()
@@ -245,11 +244,11 @@ onMounted(async () => {
           <tbody>
             <tr
               v-for="f in lista.filas"
-              :key="f.id"
-              :class="{ sel: detalle?.id === f.id }"
+              :key="f.ref"
+              :class="{ sel: detalle?.ref === f.ref }"
               tabindex="0"
-              @click="abrir(f.id)"
-              @keydown.enter="abrir(f.id)"
+              @click="abrir(f.ref)"
+              @keydown.enter="abrir(f.ref)"
             >
               <td>{{ fecha(f.creada_en) }}</td>
               <td>{{ TIPOS[f.tipo] }}<span v-if="f.tiene_receta"> 📎</span></td>
@@ -319,7 +318,7 @@ onMounted(async () => {
         </dl>
         <p v-if="detalle.receta_nombre">
           <a
-            :href="`/api/admin/solicitudes/${detalle.id}/receta`"
+            :href="`/api/admin/solicitudes/${encodeURIComponent(detalle.ref)}/receta`"
             target="_blank"
             rel="noopener noreferrer"
           >Ver receta adjunta</a>

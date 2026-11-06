@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { aceptaPrivacidad, correoOpcional, nombre, telefono, texto, textoOpcional, trampa } from './comun'
+import { aceptaPrivacidad, correoOpcional, linea, nombre, telefono, textoOpcional, trampa } from './comun'
 
 export const SERVICIOS_EMPRESA = [
   'evaluacion-visual',
@@ -8,10 +8,10 @@ export const SERVICIOS_EMPRESA = [
 ] as const
 
 export const empresaSchema = z.object({
-  empresa: texto('Escribe el nombre de la empresa', 2, 160),
+  empresa: linea('Escribe el nombre de la empresa', 2, 160),
   nombre,
-  area: texto('Escribe tu área o puesto', 2, 120),
-  ciudad: texto('Escribe la ciudad o sede', 2, 120),
+  area: linea('Escribe tu área o puesto', 2, 120),
+  ciudad: linea('Escribe la ciudad o sede', 2, 120),
   telefono,
   correo: correoOpcional,
   interesados: z.coerce.number('Escribe un número aproximado')

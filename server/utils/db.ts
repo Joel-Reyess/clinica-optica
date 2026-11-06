@@ -123,6 +123,48 @@ const MIGRACIONES: string[] = [
     orden INTEGER NOT NULL DEFAULT 0,
     creado_en TEXT NOT NULL DEFAULT (datetime('now'))
   );
+  `,
+  // 7: marcas como lista cerrada (se eligen en un select; así no hay variantes mal escritas)
+  `
+  CREATE TABLE marcas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    clave TEXT NOT NULL UNIQUE
+  );
+  INSERT INTO marcas (nombre, clave)
+    SELECT marca, lower(replace(replace(replace(marca, ' ', ''), '-', ''), '.', ''))
+    FROM productos WHERE marca IS NOT NULL AND marca <> '' GROUP BY lower(replace(replace(replace(marca, ' ', ''), '-', ''), '.', ''));
+  `,
+  // 8: horarios de citas (qué días y a qué horas se puede pedir cita)
+  `
+  CREATE TABLE horario_semanal (
+    dia INTEGER PRIMARY KEY CHECK (dia BETWEEN 0 AND 6), -- 0 = domingo
+    activo INTEGER NOT NULL DEFAULT 0,
+    apertura TEXT NOT NULL DEFAULT '09:00',
+    cierre TEXT NOT NULL DEFAULT '18:00',
+    pausa_inicio TEXT,
+    pausa_fin TEXT
+  );
+  -- Horario PROVISIONAL de arranque. TODO(cliente): confirmar y ajustar en el panel.
+  INSERT INTO horario_semanal (dia, activo, apertura, cierre) VALUES
+    (0, 0, '09:00', '14:00'), (1, 1, '09:00', '18:00'), (2, 1, '09:00', '18:00'),
+    (3, 1, '09:00', '18:00'), (4, 1, '09:00', '18:00'), (5, 1, '09:00', '18:00'),
+    (6, 1, '09:00', '14:00');
+
+  CREATE TABLE dias_cerrados (
+    fecha TEXT PRIMARY KEY, -- AAAA-MM-DD
+    motivo TEXT
+  );
+
+  CREATE TABLE ajustes (
+    clave TEXT PRIMARY KEY,
+    valor TEXT NOT NULL
+  );
+  INSERT INTO ajustes (clave, valor) VALUES
+    ('duracion_min', '30'),
+    ('cupo', '1'),
+    ('anticipacion_horas', '4'),
+    ('dias_adelante', '45');
   `
 ]
 

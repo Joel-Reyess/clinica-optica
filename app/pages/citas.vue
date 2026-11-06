@@ -64,6 +64,10 @@ const appointment = reactive(emptyAppointment())
 // Si la persona viene de "Convenios", se conserva la empresa elegida
 const route = useRoute()
 const convenio = ref(typeof route.query.convenio === 'string' ? route.query.convenio.slice(0, 120) : '')
+// Días y horas libres que publica la clínica (se piden al servidor)
+const { data: disponibilidad, refresh: refrescarDisponibilidad } = await useFetch<{ dias: Array<{ fecha: string, horas: string[] }> }>('/api/citas/disponibilidad', { default: () => ({ dias: [] }) })
+const diasLibres = computed(() => new Map(disponibilidad.value.dias.map(d => [d.fecha, d.horas])))
+const horasDelDia = computed(() => diasLibres.value.get(selectedDate.value) ?? [])
 const confirmationRef = ref('')
 const confirmationUrl = ref('')
 
@@ -94,7 +98,7 @@ const calendarCells = computed(() => {
         key: value,
         date,
         value,
-        disabled: date < today || date.getDay() === 0
+        disabled: date < today || !diasLibres.value.has(value)
       }
     })
   ]
@@ -140,6 +144,7 @@ function chooseService(service: string) {
 
 function chooseDate(date: string) {
   selectedDate.value = date
+  if (!diasLibres.value.get(date)?.includes(appointment.time)) appointment.time = ''
   dateError.value = ''
 }
 
@@ -196,11 +201,19 @@ onBeforeUnmount(() => {
   document.removeEventListener('pointerdown', closeServiceMenuOnOutsideClick)
 })
 
+const fieldErrorsLocal = reactive({ hora: '' })
+
 async function sendAppointment() {
   if (!selectedDate.value) {
     dateError.value = 'Elige un día disponible para continuar.'
     return
   }
+
+  if (!appointment.time) {
+    fieldErrorsLocal.hora = 'Elige un horario disponible.'
+    return
+  }
+  fieldErrorsLocal.hora = ''
 
   if (!appointment.service) {
     serviceError.value = 'Selecciona el servicio que necesitas.'
@@ -225,6 +238,11 @@ async function sendAppointment() {
   if (!ref) {
     // El error de fecha del servidor se muestra junto al calendario
     if (fieldErrors.value.fecha) dateError.value = fieldErrors.value.fecha
+    // Si el horario se ocupó mientras llenaba el formulario, se actualizan las opciones
+    if (fieldErrors.value.hora) {
+      appointment.time = ''
+      await refrescarDisponibilidad()
+    }
     return // falló: se conserva todo lo escrito
   }
 
@@ -687,7 +705,7 @@ function editAppointment() {
                 aria-live="polite"
               >
                 <span class="legend-dot" />
-                {{ dateError || 'Domingo no disponible' }}
+                {{ dateError || (disponibilidad.dias.length ? 'Solo se pueden elegir los días marcados como disponibles' : 'Por ahora no hay horarios disponibles; escríbenos por WhatsApp') }}
               </p>
             </div>
 
@@ -701,30 +719,44 @@ function editAppointment() {
                 </span>
                 <span>
                   <strong>Elige una hora preferida</strong>
-                  <small>El equipo confirmará disponibilidad</small>
+                  <small>Solo se muestran horarios libres</small>
                 </span>
               </div>
-              <label class="appointment-field appointment-time-field">
-                <span>Horario preferido <b>*</b></span>
-                <span class="appointment-input-wrap">
-                  <UIcon
-                    name="i-lucide-clock-3"
-                    aria-hidden="true"
-                  />
-                  <input
-                    v-model="appointment.time"
-                    name="time"
-                    type="time"
+              <div class="appointment-field appointment-time-field">
+                <span>Horario disponible <b>*</b></span>
+                <p
+                  v-if="!selectedDate"
+                  class="appointment-time-note"
+                >
+                  Primero elige un día en el calendario.
+                </p>
+                <div
+                  v-else
+                  class="appointment-slots"
+                  role="radiogroup"
+                  aria-label="Horarios disponibles"
+                >
+                  <button
+                    v-for="h in horasDelDia"
+                    :key="h"
+                    type="button"
+                    role="radio"
+                    class="appointment-slot"
+                    :class="{ 'is-selected': appointment.time === h }"
+                    :aria-checked="appointment.time === h"
+                    @click="appointment.time = h; fieldErrorsLocal.hora = ''"
                   >
-                </span>
+                    {{ h }}
+                  </button>
+                </div>
                 <small
-                  v-if="fieldErrors.hora"
+                  v-if="fieldErrorsLocal.hora || fieldErrors.hora"
                   class="appointment-field-error"
                   role="alert"
                 >
-                  {{ fieldErrors.hora }}
+                  {{ fieldErrorsLocal.hora || fieldErrors.hora }}
                 </small>
-              </label>
+              </div>
               <div
                 class="appointment-date-summary"
                 :class="{ 'has-date': selectedDate }"
@@ -739,7 +771,7 @@ function editAppointment() {
                 </span>
               </div>
               <p class="appointment-time-note">
-                La hora que elijas es una preferencia, no una reserva automática.
+                El equipo confirmará tu cita por WhatsApp o teléfono.
               </p>
             </div>
           </div>
@@ -2265,5 +2297,29 @@ function editAppointment() {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.appointment-slots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.appointment-slot {
+  min-width: 72px;
+  padding: 10px 14px;
+  border: 1px solid #c9d3e0;
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.appointment-slot.is-selected {
+  border-color: #1e66d0;
+  background: #1e66d0;
+  color: #fff;
 }
 </style>

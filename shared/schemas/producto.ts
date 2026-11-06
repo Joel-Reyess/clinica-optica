@@ -1,16 +1,17 @@
 import { z } from 'zod'
+import { lineaOpcional, linea, textoOpcional } from './comun'
 
 export const CATEGORIAS = ['clasicos', 'modernos', 'seguridad-graduada'] as const
 
 export const productoSchema = z.object({
   categoria: z.enum(CATEGORIAS, 'Elige una categoría'),
-  marca: z.string().trim().max(60).optional(),
-  nombre: z.string('Escribe el nombre').trim().min(2, 'Escribe el nombre').max(120),
-  codigo: z.string().trim().max(60).optional(),
-  descripcion: z.string().trim().max(1000).optional(),
-  colores: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
-  precioDesde: z.string().trim().max(40).optional(),
-  promocion: z.string().trim().max(200).optional(),
+  marca: lineaOpcional(60),
+  nombre: linea('Escribe el nombre', 2, 120),
+  codigo: lineaOpcional(60),
+  descripcion: textoOpcional(1000),
+  colores: z.array(linea('Color no válido', 1, 40)).max(20).optional(),
+  precioDesde: lineaOpcional(40),
+  promocion: lineaOpcional(200),
   visible: z.boolean().optional(),
   orden: z.number().int().min(0).max(100000).optional()
 })

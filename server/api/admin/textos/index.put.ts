@@ -1,8 +1,9 @@
 import { z } from 'zod'
+import { sinMarcado } from '#shared/schemas/comun'
 
 const esquema = z.object({
   clave: z.string().max(60),
-  valor: z.string().trim().max(2000, 'El texto es muy largo')
+  valor: z.string().max(8000, 'El texto es muy largo').transform(sinMarcado).pipe(z.string().max(2000, 'El texto es muy largo'))
 })
 
 // PUT /api/admin/textos — guarda un texto (solo claves conocidas)

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { aceptaPrivacidad, correoOpcional, nombre, telefono, textoOpcional, trampa } from './comun'
+import { aceptaPrivacidad, correoOpcional, lineaOpcional, nombre, telefono, textoOpcional, trampa } from './comun'
 
 export const OPCIONES_ARMAZON = ['armazon-con-micas', 'solo-micas'] as const
 export const SITUACIONES_VISUALES = ['tengo-receta', 'necesito-evaluacion', 'ya-me-atendieron'] as const
@@ -14,11 +14,11 @@ export const cotizacionSchema = z.object({
   situacionVisual: z.enum(SITUACIONES_VISUALES, 'Elige tu situación visual'),
   tipoLente: z.enum(TIPOS_LENTE, 'Elige un tipo de lente'),
   tratamientos: z.array(z.enum(TRATAMIENTOS)).max(5).optional(),
-  modelo: textoOpcional(160),
-  categoria: textoOpcional(80),
-  codigo: textoOpcional(80),
-  color: textoOpcional(80),
-  motivo: textoOpcional(200),
+  modelo: lineaOpcional(160),
+  categoria: lineaOpcional(80),
+  codigo: lineaOpcional(80),
+  color: lineaOpcional(80),
+  motivo: lineaOpcional(200),
   requisitosTrabajo: textoOpcional(500),
   aceptaPrivacidad,
   sitioWeb: trampa

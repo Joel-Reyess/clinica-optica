@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     VALUES (@categoria, @marca, @nombre, @codigo, @descripcion, @colores, @precio, @promocion, @visible, @orden)
   `).run({
     categoria: p.categoria,
-    marca: p.marca || null,
+    marca: resolverMarca(p.marca),
     nombre: p.nombre,
     codigo: p.codigo || null,
     descripcion: p.descripcion || null,
